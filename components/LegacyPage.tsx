@@ -8,7 +8,9 @@ type LegacyPageName =
   | "approach.html"
   | "stories.html"
   | "team.html"
-  | "contact.html";
+  | "contact.html"
+  | "privacy.html"
+  | "terms.html";
 
 export function LegacyPage({ fileName }: { fileName: LegacyPageName }) {
   const filePath = path.join(process.cwd(), "content", fileName);

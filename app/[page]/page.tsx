@@ -9,6 +9,8 @@ const pages = {
   stories: { fileName: "stories.html", title: "Case Experience" },
   team: { fileName: "team.html", title: "Our Team" },
   contact: { fileName: "contact.html", title: "Contact" },
+  privacy: { fileName: "privacy.html", title: "Privacy" },
+  terms: { fileName: "terms.html", title: "Terms of Use" },
 } as const;
 
 type PageSlug = keyof typeof pages;

@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const legacyRoutes = ["employers", "talent", "approach", "stories", "team", "contact"];
+const legacyRoutes = ["employers", "talent", "approach", "stories", "team", "contact", "privacy", "terms"];
 
 const nextConfig: NextConfig = {
   async rewrites() {

@@ -128,6 +128,13 @@ document.querySelectorAll('[data-en][data-zh]').forEach(node=>{
   const replacement=copySwaps.get(node.dataset.en);
   if(replacement){node.dataset.en=replacement[0];node.dataset.zh=replacement[1]}
 });
+const legalFooter=document.querySelector('.footer-bottom');
+if(legalFooter&&!legalFooter.querySelector('.legal-links')){
+  const staticHtml=location.pathname.endsWith('.html');
+  const privacyHref=staticHtml?'privacy.html':'/privacy';
+  const termsHref=staticHtml?'terms.html':'/terms';
+  legalFooter.insertAdjacentHTML('beforeend',`<nav class="legal-links" aria-label="Legal"><a href="${privacyHref}" data-en="Privacy Policy" data-zh="隐私政策">Privacy Policy</a><a href="${termsHref}" data-en="Terms of Use" data-zh="使用条款">Terms of Use</a></nav>`);
+}
 let initialLanguage='en';
 try{initialLanguage=localStorage.getItem('aqyr-demo-language')||'en'}catch{}
 setLanguage(initialLanguage);

@@ -52,6 +52,20 @@ html[data-lang="zh"] p{line-break:strict;text-wrap:pretty}
 .office-detail{display:block;margin:.5em 0;line-height:1.6}
 .office-detail strong{display:inline;color:var(--night);font-weight:600;margin-right:.35em}
 
+.legal-hero{min-height:410px}
+.legal-section{background:var(--white)}
+.legal-copy{max-width:900px}
+.legal-updated{margin:0 0 38px;color:#687a72;font-size:13px}
+.legal-copy section{padding:28px 0;border-top:1px solid var(--line)}
+.legal-copy h2{font:600 clamp(23px,3vw,32px)/1.2 'Rethink Sans',Arial,sans-serif;letter-spacing:-.02em;margin:0 0 13px}
+.legal-copy p{max-width:790px;color:var(--muted);font-size:16px;line-height:1.8}
+.legal-copy section p:last-child{margin-bottom:0}
+.legal-copy a:not(.button){color:#277c53}
+.legal-back{margin:38px 0 0}
+.legal-links{display:flex;gap:20px;align-items:center;margin-left:auto}
+.legal-links a{font-size:11px!important;text-decoration:none;color:#1F4434!important}
+@media(max-width:720px){.legal-hero{min-height:390px}.legal-copy{width:calc(100% - 38px)}.legal-copy section{padding:23px 0}.legal-copy p{font-size:15px}.legal-links{margin-left:0;gap:16px;flex-wrap:wrap}}
+
 /* A softer, consistent shape system for panels and controls. */
 :root{--radius-sm:10px;--radius-md:18px;--radius-lg:22px;--radius-pill:999px}
 /* Match AQYR's soft capsule navigation and pill-shaped primary actions. */
