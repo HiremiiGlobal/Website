@@ -8,6 +8,9 @@ function setLanguage(language){
   document.querySelectorAll('[data-en][data-zh]').forEach(node=>{
     node.innerHTML=language==='zh'?node.dataset.zh:node.dataset.en;
   });
+  document.querySelectorAll('[data-placeholder-en][data-placeholder-zh]').forEach(node=>{
+    node.placeholder=language==='zh'?node.dataset.placeholderZh:node.dataset.placeholderEn;
+  });
   if(languageButton) languageButton.textContent=language==='en'?'中文':'English';
   try{localStorage.setItem('aqyr-demo-language',language)}catch{}
 }
@@ -47,6 +50,37 @@ function addPageDepth(){
       if(!details||!paragraph)return;
       paragraph.innerHTML=`<span class="office-detail"><strong data-en="Address:" data-zh="地址：">Address:</strong> ${details.address}</span>${details.phone?`<span class="office-detail"><strong data-en="Phone:" data-zh="电话：">Phone:</strong> <a href="tel:${details.tel}">${details.phone}</a></span>`:''}${details.email?`<span class="office-detail"><strong data-en="Email:" data-zh="邮箱：">Email:</strong> <a href="mailto:${details.email}">${details.email}</a></span>`:''}`;
     });
+
+    const enquiry=document.querySelector('.form-demo');
+    if(enquiry){
+      enquiry.innerHTML=`<form class="enquiry-form" id="enquiry-form">
+        <div class="form-grid">
+          <label class="field"><span data-en="I am enquiring as" data-zh="咨询身份">I am enquiring as</span><select name="enquiryType" required><option value="" data-en="Select one" data-zh="请选择">Select one</option><option value="Employer" data-en="Employer" data-zh="企业">Employer</option><option value="Skilled professional" data-en="Skilled professional" data-zh="专业人才">Skilled professional</option></select></label>
+          <label class="field"><span data-en="I need help with" data-zh="咨询需求">I need help with</span><select name="requestType" required><option value="" data-en="Select one" data-zh="请选择">Select one</option><option value="Hiring and talent" data-en="Hiring and talent" data-zh="招聘与人才对接">Hiring and talent</option><option value="Finding an employer" data-en="Finding an employer" data-zh="寻找雇主">Finding an employer</option><option value="Migration advice" data-en="Migration advice" data-zh="移民建议">Migration advice</option><option value="A complex case" data-en="A complex case" data-zh="复杂个案">A complex case</option><option value="Other" data-en="Other" data-zh="其他">Other</option></select></label>
+          <label class="field"><span data-en="Name" data-zh="姓名">Name</span><input name="name" autocomplete="name" required data-placeholder-en="Your name" data-placeholder-zh="请输入姓名" placeholder="Your name"></label>
+          <label class="field"><span data-en="Company / occupation" data-zh="公司 / 职业">Company / occupation</span><input name="companyOccupation" autocomplete="organization-title" data-placeholder-en="Company or occupation (optional)" data-placeholder-zh="公司或职业（选填）" placeholder="Company or occupation (optional)"></label>
+          <label class="field"><span data-en="Email" data-zh="邮箱">Email</span><input type="email" name="email" autocomplete="email" required data-placeholder-en="you@example.com" data-placeholder-zh="你的邮箱地址" placeholder="you@example.com"></label>
+          <label class="field"><span data-en="Phone (optional)" data-zh="电话（选填）">Phone (optional)</span><input type="tel" name="phone" autocomplete="tel" data-placeholder-en="Phone number" data-placeholder-zh="联系电话" placeholder="Phone number"></label>
+          <label class="field full"><span data-en="Briefly tell us what you are looking for" data-zh="请简单说明你的需求">Briefly tell us what you are looking for</span><textarea name="message" maxlength="1500" required data-placeholder-en="A short summary is enough for an initial enquiry." data-placeholder-zh="简单介绍一下你的情况和希望获得的帮助即可。" placeholder="A short summary is enough for an initial enquiry."></textarea></label>
+        </div>
+        <button class="button enquiry-submit" type="submit"><span data-en="Prepare email ↗" data-zh="发送邮件 ↗">Prepare email ↗</span></button>
+        <p class="enquiry-status" id="enquiry-status" aria-live="polite" data-en="Your email app will open with these details ready to review and send." data-zh="系统会打开邮件应用，并填好以上内容供你检查后发送。">Your email app will open with these details ready to review and send.</p>
+      </form>`;
+      const form=enquiry.querySelector('#enquiry-form');
+      form.addEventListener('submit',event=>{
+        event.preventDefault();
+        if(!form.reportValidity())return;
+        const data=new FormData(form);
+        const language=root.dataset.lang==='zh'?'zh':'en';
+        const labels=language==='zh'?['咨询身份','咨询需求','姓名','公司 / 职业','邮箱','电话','需求说明']:['Enquiry type','What you need','Name','Company / occupation','Email','Phone','Enquiry details'];
+        const values=[data.get('enquiryType'),data.get('requestType'),data.get('name'),data.get('companyOccupation')||'—',data.get('email'),data.get('phone')||'—',data.get('message')];
+        const subject=language==='zh'?'网站咨询':'Website enquiry';
+        const body=labels.map((label,index)=>`${label}: ${values[index]}`).join('\n\n');
+        const status=document.querySelector('#enquiry-status');
+        if(status){status.textContent=language==='zh'?'邮件应用已打开（如未打开，请直接发送至 info@hiremiiglobal.com）。':'Your email app should open now. If it does not, email info@hiremiiglobal.com directly.';status.dataset.en=status.textContent;status.dataset.zh=status.textContent;}
+        window.location.href=`mailto:info@hiremiiglobal.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      });
+    }
   }
 }
 addPageDepth();

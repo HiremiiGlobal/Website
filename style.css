@@ -51,3 +51,31 @@ html[data-lang="zh"] h3{line-height:1.28;text-wrap:pretty}
 html[data-lang="zh"] p{line-break:strict;text-wrap:pretty}
 .office-detail{display:block;margin:.5em 0;line-height:1.6}
 .office-detail strong{display:inline;color:var(--night);font-weight:600;margin-right:.35em}
+
+/* A softer, consistent shape system for panels and controls. */
+:root{--radius-sm:10px;--radius-md:18px;--radius-lg:22px;--radius-pill:999px}
+/* Match AQYR's soft capsule navigation and pill-shaped primary actions. */
+.top{width:min(var(--max),calc(100% - 56px));height:70px;margin:12px auto -82px;padding:0 22px;background:var(--white);color:var(--night);border-radius:var(--radius-pill);box-shadow:0 8px 28px rgba(21,35,31,.12)}
+.nav .nav-cta,.button{border-radius:var(--radius-pill);transition:transform .2s ease,box-shadow .2s ease,background-color .2s ease}
+.language{border-radius:var(--radius-pill);transition:background-color .2s ease,border-color .2s ease}
+.hero-visual{border-radius:var(--radius-lg)}
+.visual-node{border-radius:var(--radius-sm)}
+.audience,.person,.office,.form-demo,.partner-strip{border-radius:var(--radius-md)}
+.person{overflow:hidden}
+.form-demo{border-radius:var(--radius-lg);box-shadow:0 14px 38px rgba(21,35,31,.07)}
+.field{border-radius:var(--radius-sm);transition:border-color .2s ease,box-shadow .2s ease}
+.enquiry-form .field{display:flex;flex-direction:column;gap:7px;color:#5A5A5A;font-weight:600}
+.enquiry-form input,.enquiry-form select,.enquiry-form textarea{width:100%;border:0;outline:0;background:transparent;color:var(--ink);font-family:inherit;font-size:14px;font-weight:400;line-height:1.5;min-width:0}
+.enquiry-form input,.enquiry-form select{min-height:24px}
+.enquiry-form textarea{min-height:86px;resize:vertical}
+.enquiry-form input::placeholder,.enquiry-form textarea::placeholder{color:#82928d;opacity:1;font-weight:400}
+.enquiry-form select:invalid{color:#82928d}
+.enquiry-form .field:focus-within{border-color:#45C487;box-shadow:0 0 0 3px rgba(69,196,135,.14)}
+.enquiry-submit{margin-top:16px;border:0;cursor:pointer;font:inherit}
+.enquiry-status{min-height:1.5em;margin:10px 0 0;color:#5A5A5A;font-size:12px}
+.tag,.pathway-art:after{border-radius:var(--radius-pill)}
+.pathway-band{border-radius:var(--radius-lg);overflow:hidden}
+.nav.open{border-radius:0 0 var(--radius-md) var(--radius-md);box-shadow:0 18px 32px rgba(21,35,31,.12)}
+.button:focus-visible,.nav a:focus-visible,.language:focus-visible,.menu:focus-visible{outline:3px solid #027D8A;outline-offset:3px}
+@media(hover:hover){.nav .nav-cta:hover,.button:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(21,35,31,.14)}.audience:hover,.person:hover,.office:hover{box-shadow:0 14px 32px rgba(21,35,31,.09);transform:translateY(-3px);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;border-color:#a8c8af}}
+@media(max-width:720px){.top{width:calc(100% - 24px);height:62px;margin:10px auto -72px;padding:0 17px}.hero-content{padding-top:104px}.nav{top:62px}.nav.open{padding:21px;border-radius:0 0 var(--radius-md) var(--radius-md)}.pathway-band{border-radius:var(--radius-md);margin:0 19px}}
