@@ -123,3 +123,18 @@ html[data-lang="zh"] p{line-break:strict;text-wrap:pretty}
 @keyframes node-arrive{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
 @keyframes signal-pulse{0%,100%{opacity:.72}50%{opacity:1}}
 @media(prefers-reduced-motion:reduce){.hero-content>*,.hero-visual,.visual-node,.visual-arrow{animation:none!important}.hero-visual{opacity:1;filter:none;translate:none}.visual-node{opacity:1;transform:none}.reveal{opacity:1;transform:none;transition:none}.grid2>.reveal,.grid3>.reveal,.steps>.reveal{transition-delay:0s}}
+
+/* Give the bilingual sponsorship headings balanced line breaks and room for useful detail. */
+.visa-pathways .intro h2{max-width:560px;font-size:clamp(30px,3.3vw,42px);line-height:1.12;text-wrap:balance}
+.visa-grid{align-items:stretch}
+.visa-card{height:100%;min-height:0}
+.visa-card h3{text-wrap:balance}
+.visa-details{margin-top:20px;padding-top:17px;border-top:1px solid var(--line)}
+.visa-details h4{margin:17px 0 9px;color:var(--night);font-size:13px;line-height:1.4;font-weight:700}
+.visa-details h4:first-child{margin-top:0}
+.visa-details ul{margin:0;padding-left:19px;color:var(--muted);font-size:13px;line-height:1.65}
+.visa-details li+li{margin-top:7px}
+.visa-details p{margin:0;color:var(--muted);font-size:13px;line-height:1.65}
+.visa-official-links{display:flex;gap:22px;flex-wrap:wrap;margin-top:15px}
+.visa-official-links a{color:#148769;font-size:12px;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:720px){.visa-pathways .intro h2{font-size:clamp(30px,7vw,38px)}.visa-official-links{gap:12px 18px}}

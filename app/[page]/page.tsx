@@ -5,6 +5,7 @@ import { LegacyPage } from "@/components/LegacyPage";
 const pages = {
   employers: { fileName: "employers.html", title: "Employers" },
   talent: { fileName: "talent.html", title: "Professionals" },
+  sponsorship: { fileName: "sponsorship.html", title: "Employer Sponsorship" },
   approach: { fileName: "approach.html", title: "Our Approach" },
   stories: { fileName: "stories.html", title: "Case Experience" },
   team: { fileName: "team.html", title: "Our Team" },
