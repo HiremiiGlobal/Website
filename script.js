@@ -41,7 +41,7 @@ function addPageDepth(){
     const offices=[...main.querySelectorAll('.office')];
     const officeDetails=[
       {address:'121, 847 Whitehorse Road<br>Box Hill, Victoria 3128',phone:'+61 430 907 019',tel:'+61430907019',email:'info@hiremiiglobal.com'},
-      {address:'L1/251 St Georges Tce<br>Perth, Western Australia 6000'},
+      {address:'L1/251 St Georges Tce<br>Perth, Western Australia 6000',phone:'+61 3 9415 4000',tel:'+61394154000'},
       {address:'Room 807A, Building B, Zhongshan SOHO<br>No. 1065 Zhongshan West Road<br>Changning District, Shanghai',phone:'+86 137 6139 5387',tel:'+8613761395387'}
     ];
     offices.forEach((office,index)=>{
