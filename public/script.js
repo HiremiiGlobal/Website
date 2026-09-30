@@ -63,7 +63,7 @@ function addPageDepth(){
           <label class="field"><span data-en="Phone (optional)" data-zh="电话（选填）">Phone (optional)</span><input type="tel" name="phone" autocomplete="tel" data-placeholder-en="Phone number" data-placeholder-zh="联系电话" placeholder="Phone number"></label>
           <label class="field full"><span data-en="Briefly tell us what you are looking for" data-zh="请简单说明你的需求">Briefly tell us what you are looking for</span><textarea name="message" maxlength="1500" required data-placeholder-en="A short summary is enough for an initial enquiry." data-placeholder-zh="简单介绍一下你的情况和希望获得的帮助即可。" placeholder="A short summary is enough for an initial enquiry."></textarea></label>
         </div>
-        <button class="button enquiry-submit" type="submit"><span data-en="Prepare email ↗" data-zh="发送邮件 ↗">Prepare email ↗</span></button>
+        <button class="button enquiry-submit" type="submit"><span data-en="Prepare email" data-zh="发送邮件">Prepare email</span></button>
         <p class="enquiry-status" id="enquiry-status" aria-live="polite" data-en="Your email app will open with these details ready to review and send." data-zh="系统会打开邮件应用，并填好以上内容供你检查后发送。">Your email app will open with these details ready to review and send.</p>
       </form>`;
       const form=enquiry.querySelector('#enquiry-form');
