@@ -5,6 +5,8 @@ export const siteUrl = new URL(
   process.env.NEXT_PUBLIC_SITE_URL || "https://website-demo-blush-beta.vercel.app",
 ).origin;
 export const brandName = "AQYR Global Service";
+export const organizationDescription =
+  "AQYR Global Service is a subsidiary of AQYR, providing Australian visa, employer sponsorship and workforce support for businesses and individuals.";
 export const shareImage = {
   url: `${siteUrl}/share-cover.png`,
   width: 1200,
@@ -13,13 +15,13 @@ export const shareImage = {
   type: "image/png",
 };
 export const pages = {
-  employers: { fileName: "employers.html", title: "Employer Solutions", description: "Workforce planning, talent connections and employer sponsorship support for Australian businesses, including 482 and 186 matters." },
-  talent: { fileName: "talent.html", title: "Individuals & Visas", description: "Employer connections and Australian visa support for individuals: sponsored work, visitor, student, skilled, partner and complex matters." },
-  sponsorship: { fileName: "sponsorship.html", title: "482 & 186 Employer Sponsorship", description: "Understand 482 Skills in Demand and 186 Direct Entry and TRT pathways, preparation and coordinated support for employers and applicants." },
-  approach: { fileName: "approach.html", title: "Our Approach", description: "From initial assessment and an agreed scope to document preparation and ongoing communication: how our advisory team supports your matter." },
-  stories: { fileName: "stories.html", title: "Case Experience", description: "Experience from 200+ employer-sponsored cases across 482 and 186: employer and role assessment, nomination preparation and coordinated visa support." },
-  team: { fileName: "team.html", title: "Our Team", description: "Meet the AQYR Global Service team across migration, legal services, compliance and client delivery, led by Leon Gao with over ten years of experience." },
-  contact: { fileName: "contact.html", title: "Contact", description: "Contact AQYR Global Service in Melbourne, Perth or Shanghai about recruitment, employer sponsorship, Australian visas and complex matters." },
+  employers: { fileName: "employers.html", title: "Employer Sponsorship & Recruitment", description: "Recruitment and employer sponsorship support for Australian businesses, including workforce planning, 482 nominations and 186 visa matters." },
+  talent: { fileName: "talent.html", title: "Australian Visa Services for Individuals", description: "Australian visa advice and application support for individuals, including sponsored work, visitor, student, skilled and partner visa matters." },
+  sponsorship: { fileName: "sponsorship.html", title: "482 & 186 Direct Entry Visa Support", description: "Explore 482 Skills in Demand, 186 Direct Entry and TRT pathways, with employer nomination and visa preparation support for businesses and applicants." },
+  approach: { fileName: "approach.html", title: "Our Visa & Sponsorship Support Process", description: "How we support visa and employer sponsorship matters: initial assessment, an agreed service scope, document preparation and ongoing communication." },
+  stories: { fileName: "stories.html", title: "482 & 186 Sponsorship Case Experience", description: "Experience handling 200+ employer-sponsored cases across 482 and 186, covering employer assessment, nomination preparation and visa application support." },
+  team: { fileName: "team.html", title: "Visa & Workforce Advisory Team", description: "Meet the migration, legal support and client service team at AQYR Global Service, a subsidiary of AQYR." },
+  contact: { fileName: "contact.html", title: "Contact Our Visa & Workforce Team", description: "Contact our Melbourne, Perth or Shanghai team about Australian visas, 482 and 186 employer sponsorship, recruitment and complex visa matters." },
   privacy: { fileName: "privacy.html", title: "Privacy Policy", description: "How AQYR Global Service handles information when you visit our website or contact our team." },
   terms: { fileName: "terms.html", title: "Terms of Use", description: "Terms for using the AQYR Global Service website, including information, enquiries and professional services." },
 } as const;

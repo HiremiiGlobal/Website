@@ -3,8 +3,8 @@ import { LegacyPage } from "@/components/LegacyPage";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata(
-  "Workforce & Australian Visa Advisory",
-  "Employer sponsorship, particularly 482 and 186 Direct Entry, alongside recruitment, other Australian visas and complex-case support.",
+  "Australian Visa & Workforce Services",
+  "Australian visa and workforce support for businesses and individuals, including 482 and 186 Direct Entry sponsorship, recruitment and other visa services.",
   "/",
 );
 
