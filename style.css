@@ -58,8 +58,8 @@
 .field-heading{display:flex;align-items:baseline;gap:4px}.field-heading .required-mark{margin-left:0}
 
 /* A small number of real scenes balances the advisory diagrams and brand graphics. */
-.hero-photo{width:100%;max-width:560px;justify-self:end;margin:0;padding:10px;background:#fafbf811;border:1px solid #ffffff30;border-radius:30px;box-shadow:0 24px 65px #06241826;overflow:hidden}
-.hero-photo img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:21px}
+.hero-photo{width:100%;max-width:560px;justify-self:end;margin:0;border-radius:24px;box-shadow:0 16px 40px #06241820;overflow:hidden}
+.hero-photo img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
 .scene-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:70px;align-items:center;margin-bottom:36px}
 .scene-copy{min-width:0}.scene-copy p{max-width:510px;color:var(--muted);margin:20px 0 0}
 .scene-photo{margin:0;border-radius:26px;overflow:hidden;background:var(--mist)}
@@ -67,7 +67,7 @@
 @media(min-width:1201px){.hero-layout:has(>.hero-photo){width:min(1320px,calc(100% - 64px));grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:56px}}
 @media(max-width:1100px){.scene-intro{gap:40px}}
 @media(max-width:900px){.hero-photo{justify-self:start;max-width:560px}.hero-photo img{aspect-ratio:16/10}.scene-intro{grid-template-columns:1fr;gap:28px}.scene-copy p{max-width:700px}.scene-photo{max-width:700px}}
-@media(max-width:600px){.hero-photo{padding:7px;border-radius:25px}.hero-photo img{border-radius:18px;aspect-ratio:16/10}.scene-intro{gap:24px;margin-bottom:28px}.scene-photo{border-radius:22px}.scene-copy p{margin-top:18px}}
+@media(max-width:600px){.hero-photo{border-radius:20px}.hero-photo img{aspect-ratio:16/10}.scene-intro{gap:24px;margin-bottom:28px}.scene-photo{border-radius:22px}.scene-copy p{margin-top:18px}}
 
 .experience-track{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.6fr);background:#fff;border:1px solid var(--line);border-radius:28px;overflow:hidden}
 .experience-volume{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:44px;background:var(--night);color:#fff}

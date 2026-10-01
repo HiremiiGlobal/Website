@@ -8,7 +8,7 @@
       "source": "https://www.pexels.com/photo/a-close-up-shot-of-people-reviewing-documents-8730980/",
       "download": "https://images.pexels.com/photos/8730980/pexels-photo-8730980.jpeg?auto=compress&w=2000&q=90",
       "license": "https://www.pexels.com/license/",
-      "placement": "Homepage hero: collaborative document review",
+      "placement": "Previous homepage hero, retained as an unused source asset",
       "attributionRequired": false
     },
     {
@@ -26,7 +26,25 @@
       "source": "https://unsplash.com/photos/people-crossing-a-sunlit-city-street-8ATGlh0GvGA",
       "download": "https://images.unsplash.com/photo-1765893081244-959728140994?fm=jpg&fit=max&w=2000&q=90",
       "license": "https://unsplash.com/license",
-      "placement": "Individuals and visas hero: Melbourne city life",
+      "placement": "Previous individuals hero, retained as an unused source asset",
+      "attributionRequired": false
+    },
+    {
+      "name": "professional-conversation",
+      "photographer": "Anna Shvets",
+      "source": "https://www.pexels.com/photo/group-of-cheerful-businesspeople-discussing-strategy-5324958/",
+      "download": "https://images.pexels.com/photos/5324958/pexels-photo-5324958.jpeg?auto=compress&w=2000&q=90",
+      "license": "https://www.pexels.com/license/",
+      "placement": "Homepage hero: a friendly professional conversation, not AQYR staff or clients",
+      "attributionRequired": false
+    },
+    {
+      "name": "personal-conversation",
+      "photographer": "Edmond Dantès",
+      "source": "https://www.pexels.com/photo/women-sitting-on-table-with-cups-of-coffee-and-laptop-4340139/",
+      "download": "https://images.pexels.com/photos/4340139/pexels-photo-4340139.jpeg?auto=compress&w=2000&q=90",
+      "license": "https://www.pexels.com/license/",
+      "placement": "Individuals and visas hero: an informal one-to-one conversation, not AQYR staff or clients",
       "attributionRequired": false
     }
   ]
