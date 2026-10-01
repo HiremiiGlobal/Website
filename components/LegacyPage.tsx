@@ -23,7 +23,7 @@ export function LegacyPage({ fileName }: { fileName: LegacyPageName }) {
   }
 
   const markup = body.replace(
-    /<script\s+src=["']script\.js["'][^>]*><\/script>/gi,
+    /<script\s+src=["']\/?script\.js["'][^>]*><\/script>/gi,
     "",
   );
 

@@ -1,148 +1,109 @@
-const root=document.documentElement;
-const languageButton=document.querySelector('[data-language-toggle]');
-const menuButton=document.querySelector('.menu');
-const navigation=document.querySelector('.nav');
-function setLanguage(language){
-  root.dataset.lang=language;
-  root.lang=language==='zh'?'zh-Hans':'en';
-  document.querySelectorAll('[data-en][data-zh]').forEach(node=>{
-    node.innerHTML=language==='zh'?node.dataset.zh:node.dataset.en;
-  });
-  document.querySelectorAll('[data-placeholder-en][data-placeholder-zh]').forEach(node=>{
-    node.placeholder=language==='zh'?node.dataset.placeholderZh:node.dataset.placeholderEn;
-  });
-  if(languageButton) languageButton.textContent=language==='en'?'中文':'English';
-  try{localStorage.setItem('aqyr-demo-language',language)}catch{}
-}
-function addPageDepth(){
-  const page=location.pathname.split('/').pop()||'index.html';
-  const main=document.querySelector('main');
-  const cta=main?.querySelector('.cta');
-  if(!main)return;
-  const sections={
-    'index.html':`<section class="section soft"><div class="wrap"><div class="intro"><div><div class="label" data-en="A connected journey" data-zh="从需求到后续支持">A connected journey</div><h2 data-en="Clear steps. Considered decisions." data-zh="流程清晰，判断审慎。">Clear steps. Considered decisions.</h2></div><p data-en="We bring together workforce understanding, relevant introductions and migration experience—without reducing people to a profile or a vacancy." data-zh="我们结合用工理解、相关人才对接与移民服务经验，不把人才简化成一份简历，也不把岗位简化成一个职位名称。">We bring together workforce understanding, relevant introductions and migration experience—without reducing people to a profile or a vacancy.</p></div><div class="grid3"><article class="audience"><div class="label">01 / LISTEN</div><h3 data-en="Understand the context." data-zh="先了解实际情况。">Understand the context.</h3><p data-en="Start with the employer’s needs or the professional’s experience, goals and circumstances." data-zh="从企业的真实需求，或专业人才的经验、目标与实际情况开始。">Start with the employer’s needs or the professional’s experience, goals and circumstances.</p></article><article class="audience"><div class="label">02 / CONNECT</div><h3 data-en="Explore where there may be fit." data-zh="探索可能的匹配。">Explore where there may be fit.</h3><p data-en="Consider role requirements, capabilities and expectations on both sides before moving to an introduction." data-zh="在安排沟通前，综合考虑岗位要求、人才能力与双方期望。">Consider role requirements, capabilities and expectations on both sides before moving to an introduction.</p></article><article class="audience"><div class="label">03 / SUPPORT</div><h3 data-en="Plan the next step together." data-zh="共同规划下一步。">Plan the next step together.</h3><p data-en="Where relevant, connect employment discussions with professional guidance on employer-sponsored migration." data-zh="在适用时，将雇佣沟通与雇主担保移民专业支持衔接起来。">Where relevant, connect employment discussions with professional guidance on employer-sponsored migration.</p></article></div><p class="note" data-en="Introductions, employment and visa outcomes depend on individual circumstances, role availability and relevant requirements; they cannot be guaranteed." data-zh="人才介绍、就业与签证结果取决于个人情况、岗位空缺及相关要求，无法作出保证。">Introductions, employment and visa outcomes depend on individual circumstances, role availability and relevant requirements; they cannot be guaranteed.</p></div></section>`,
-    'employers.html':`<section class="section soft"><div class="wrap"><div class="intro"><div><div class="label" data-en="A practical starting point" data-zh="从清晰的用工需求开始">A practical starting point</div><h2 data-en="What helps us understand your hiring need?" data-zh="哪些信息有助于我们了解招聘需求？">What helps us understand your hiring need?</h2></div><p data-en="You do not need to have every detail finalised. A clear first conversation helps identify what should be explored next." data-zh="第一次沟通时不必准备好所有细节。先把需求说清楚，就能一起判断下一步需要了解什么。">You do not need to have every detail finalised. A clear first conversation helps identify what should be explored next.</p></div><div class="steps"><article class="step"><small>01</small><div><h3 data-en="The role and business context" data-zh="岗位与企业背景">The role and business context</h3><p data-en="Key responsibilities, location, team structure and why the position matters to your business." data-zh="岗位职责、工作地点、团队架构，以及这个岗位对企业的意义。">Key responsibilities, location, team structure and why the position matters to your business.</p></div></article><article class="step"><small>02</small><div><h3 data-en="The capabilities you need" data-zh="所需能力与经验">The capabilities you need</h3><p data-en="Essential skills, experience, qualifications, licences and any practical constraints." data-zh="核心技能、经验、学历、执照要求及实际限制。">Essential skills, experience, qualifications, licences and any practical constraints.</p></div></article><article class="step"><small>03</small><div><h3 data-en="The employment and sponsorship context" data-zh="雇佣与担保背景">The employment and sponsorship context</h3><p data-en="Existing recruitment efforts, timing and any sponsorship questions you would like professionally assessed." data-zh="现有招聘情况、时间安排，以及希望由专业团队评估的担保相关问题。">Existing recruitment efforts, timing and any sponsorship questions you would like professionally assessed.</p></div></article></div></div></section><section class="pathway-band"><div class="pathway-art" role="img" aria-label="Business needs connected to talent"></div><div class="pathway-copy"><div class="label" data-en="Employer-sponsored pathways" data-zh="雇主担保路径">Employer-sponsored pathways</div><h2 data-en="Employment comes first. Migration advice follows the facts." data-zh="先看真实雇佣需求，再结合事实讨论移民方案。">Employment comes first. Migration advice follows the facts.</h2><p data-en="Where sponsorship may be relevant, the role, business and candidate circumstances need careful review. The appropriate pathway depends on current requirements and professional assessment." data-zh="如涉及雇主担保，需要审慎评估岗位、企业及候选人的实际情况。适用路径取决于当时要求与专业评估。">Where sponsorship may be relevant, the role, business and candidate circumstances need careful review. The appropriate pathway depends on current requirements and professional assessment.</p></div></section>`,
-    'talent.html':`<section class="section soft"><div class="wrap"><div class="intro"><div><div class="label" data-en="Before a first conversation" data-zh="初次沟通前">Before a first conversation</div><h2 data-en="A few details help us understand your direction." data-zh="简单背景有助于我们了解你的方向。">A few details help us understand your direction.</h2></div><p data-en="You can begin with a high-level overview. Please avoid sending sensitive identity or immigration documents through a general enquiry." data-zh="可以先概述你的情况。请勿通过普通咨询表单发送敏感身份或移民文件。">You can begin with a high-level overview. Please avoid sending sensitive identity or immigration documents through a general enquiry.</p></div><div class="grid3"><article class="audience"><div class="label" data-en="Experience" data-zh="工作经验">Experience</div><h3 data-en="What have you done?" data-zh="你有哪些工作经验？">What have you done?</h3><p data-en="Share your occupation, key responsibilities, years of experience and the kinds of roles you are considering." data-zh="介绍你的职业、主要职责、工作年限，以及正在考虑的岗位方向。">Share your occupation, key responsibilities, years of experience and the kinds of roles you are considering.</p></article><article class="audience"><div class="label" data-en="Qualifications" data-zh="学历与资质">Qualifications</div><h3 data-en="What supports your profile?" data-zh="哪些资质能展现你的能力？">What supports your profile?</h3><p data-en="A simple overview of relevant study, registrations, licences or specialist skills is enough to start." data-zh="初步沟通时，简单说明相关学历、注册资质、执照或专业技能即可。">A simple overview of relevant study, registrations, licences or specialist skills is enough to start.</p></article><article class="audience"><div class="label" data-en="Goals" data-zh="个人目标">Goals</div><h3 data-en="What would a good next step look like?" data-zh="你期待怎样的下一步？">What would a good next step look like?</h3><p data-en="Tell us about your preferred locations, timing and what matters most in a potential opportunity." data-zh="可以谈谈偏好的地点、时间安排，以及你最看重的机会条件。">Tell us about your preferred locations, timing and what matters most in a potential opportunity.</p></article></div></div></section><section class="section dark"><div class="wrap"><div class="label" data-en="Common questions" data-zh="常见问题">Common questions</div><h2 data-en="Starting without an employer is still a conversation—not a promise." data-zh="没有雇主也可以先沟通，但不代表承诺就业结果。">Starting without an employer is still a conversation—not a promise.</h2><div class="steps"><article class="step"><small>Q1</small><div><h3 data-en="Can I speak with you before I have an employer?" data-zh="还没有雇主，可以先咨询吗？">Can I speak with you before I have an employer?</h3><p data-en="Yes. We can discuss your background and explore whether there may be relevant employer connections. Introductions depend on suitability and available roles." data-zh="可以。我们可以先了解你的背景，并探讨是否存在相关雇主资源。是否能够安排介绍，取决于匹配情况与岗位空缺。">Yes. We can discuss your background and explore whether there may be relevant employer connections. Introductions depend on suitability and available roles.</p></div></article><article class="step"><small>Q2</small><div><h3 data-en="Can you guarantee a job or visa?" data-zh="能保证找到工作或获批签证吗？">Can you guarantee a job or visa?</h3><p data-en="No. Hiring decisions belong to employers, and visa decisions are made by the relevant authorities. Advice depends on your circumstances and current requirements." data-zh="不能。招聘决定由雇主作出，签证决定由相关政府部门作出。具体建议取决于个人情况与当时要求。">No. Hiring decisions belong to employers, and visa decisions are made by the relevant authorities. Advice depends on your circumstances and current requirements.</p></div></article></div></div></section>`,
-    'approach.html':`<section class="section soft"><div class="wrap"><div class="intro"><div><div class="label" data-en="What good matching considers" data-zh="好的匹配会考虑什么">What good matching considers</div><h2 data-en="Fit is built from more than a job title." data-zh="匹配不只是职位名称相同。">Fit is built from more than a job title.</h2></div><p data-en="A sustainable connection considers the needs and expectations of both parties, alongside the practical context around the role." data-zh="可持续的连接需要同时考虑双方需求与期望，以及岗位背后的实际工作环境。">A sustainable connection considers the needs and expectations of both parties, alongside the practical context around the role.</p></div><div class="grid3"><article class="audience"><div class="label" data-en="For employers" data-zh="企业视角">For employers</div><h3 data-en="A real workforce need." data-zh="真实的用工需求。">A real workforce need.</h3><p data-en="Role scope, team context, capability requirements and timing help define what a suitable candidate may look like." data-zh="岗位范围、团队背景、能力要求与时间安排，有助于明确合适候选人的标准。">Role scope, team context, capability requirements and timing help define what a suitable candidate may look like.</p></article><article class="audience"><div class="label" data-en="For professionals" data-zh="人才视角">For professionals</div><h3 data-en="A credible fit with your experience." data-zh="与个人经验相符的机会。">A credible fit with your experience.</h3><p data-en="Skills, experience, qualifications, goals and practical preferences all matter when considering an opportunity." data-zh="评估机会时，需要综合考虑技能、经验、学历、目标及实际偏好。">Skills, experience, qualifications, goals and practical preferences all matter when considering an opportunity.</p></article><article class="audience"><div class="label" data-en="When sponsorship is relevant" data-zh="涉及担保时">When sponsorship is relevant</div><h3 data-en="A pathway based on individual facts." data-zh="依据具体情况评估路径。">A pathway based on individual facts.</h3><p data-en="Migration options are considered separately and carefully; an introduction or employment discussion does not determine visa eligibility." data-zh="移民路径需结合具体情况单独审慎评估；人才介绍或雇佣沟通并不代表符合签证条件。">Migration options are considered separately and carefully; an introduction or employment discussion does not determine visa eligibility.</p></article></div></div></section><section class="section"><div class="wrap"><div class="intro"><div><div class="label" data-en="Clear expectations" data-zh="清晰的服务预期">Clear expectations</div><h2 data-en="Professional support, with no shortcuts or guarantees." data-zh="提供专业支持，不承诺捷径或结果。">Professional support, with no shortcuts or guarantees.</h2></div><p data-en="We aim to make the process more understandable and coordinated while staying realistic about decisions that belong to employers and government authorities." data-zh="我们希望让流程更清楚、协作更顺畅，同时尊重招聘决定与签证决定分别由雇主和政府部门作出。">We aim to make the process more understandable and coordinated while staying realistic about decisions that belong to employers and government authorities.</p></div></div></section>`,
-    'stories.html':`<section class="section soft"><div class="wrap"><div class="intro"><div><div class="label" data-en="What the examples have in common" data-zh="这些案例的共同关注点">What the examples have in common</div><h2 data-en="Different roles call for different evidence." data-zh="不同岗位，需要不同的材料重点。">Different roles call for different evidence.</h2></div><p data-en="The examples span resources, construction and financial services. Each requires attention to the role, the person’s background and the employer’s context." data-zh="案例涉及资源、建筑和金融服务。每个案件都需要关注岗位、人才背景与雇主实际情况。">The examples span resources, construction and financial services. Each requires attention to the role, the person’s background and the employer’s context.</p></div><div class="grid3"><article class="audience"><div class="label" data-en="Role context" data-zh="岗位背景">Role context</div><h3 data-en="Understand the work itself." data-zh="理解岗位本身。">Understand the work itself.</h3><p data-en="A position description needs to reflect the actual responsibilities and business need—not just a title." data-zh="职位描述需要反映真实职责与企业需求，而不只是一个职位名称。">A position description needs to reflect the actual responsibilities and business need—not just a title.</p></article><article class="audience"><div class="label" data-en="Candidate evidence" data-zh="候选人材料">Candidate evidence</div><h3 data-en="Connect experience to requirements." data-zh="让经验与要求对应。">Connect experience to requirements.</h3><p data-en="Qualifications and experience should be reviewed in the context of the nominated role and relevant criteria." data-zh="学历与工作经验需要结合提名岗位及相关条件进行审阅。">Qualifications and experience should be reviewed in the context of the nominated role and relevant criteria.</p></article><article class="audience"><div class="label" data-en="Employer readiness" data-zh="雇主准备">Employer readiness</div><h3 data-en="Plan the process as a business." data-zh="从企业角度做好规划。">Plan the process as a business.</h3><p data-en="The employer’s circumstances, obligations and supporting information are part of a considered sponsorship process." data-zh="雇主自身情况、合规义务与支持材料，也是审慎规划担保流程的一部分。">The employer’s circumstances, obligations and supporting information are part of a considered sponsorship process.</p></article></div></div></section>`,
-    'contact.html':`<section class="section"><div class="wrap"><div class="intro"><div><div class="label" data-en="What happens next" data-zh="提交咨询后">What happens next</div><h2 data-en="A clear first step, then a considered conversation." data-zh="先迈出清晰的一步，再进一步沟通。">A clear first step, then a considered conversation.</h2></div><p data-en="Share a short overview of what you need. The right starting point depends on whether you are hiring, exploring an opportunity or seeking migration advice." data-zh="简单说明你的需求即可。企业招聘、人才寻找机会或移民咨询，各自的沟通重点会有所不同。">Share a short overview of what you need. The right starting point depends on whether you are hiring, exploring an opportunity or seeking migration advice.</p></div><div class="steps"><article class="step"><small>01</small><div><h3 data-en="Tell us which side you are on" data-zh="告诉我们你的咨询身份">Tell us which side you are on</h3><p data-en="Let us know whether you represent an employer or are a skilled professional, and the best way to reach you." data-zh="说明你是企业代表还是专业人才，以及方便联系你的方式。">Let us know whether you represent an employer or are a skilled professional, and the best way to reach you.</p></div></article><article class="step"><small>02</small><div><h3 data-en="Describe the question" data-zh="简单描述你的问题">Describe the question</h3><p data-en="A short summary of the role, experience or advice you are looking for is enough for an initial enquiry." data-zh="初次咨询只需简要说明岗位、个人经验或希望了解的建议。">A short summary of the role, experience or advice you are looking for is enough for an initial enquiry.</p></div></article><article class="step"><small>03</small><div><h3 data-en="Discuss a suitable next step" data-zh="沟通合适的下一步">Discuss a suitable next step</h3><p data-en="The team can clarify what information may be needed and whether a further discussion is appropriate." data-zh="团队可以说明后续可能需要的信息，并确认是否适合进一步沟通。">The team can clarify what information may be needed and whether a further discussion is appropriate.</p></div></article></div><p class="note" data-en="Please do not include passport numbers, bank details or full visa documents in an initial enquiry." data-zh="初次咨询时请勿提供护照号码、银行资料或完整签证文件。">Please do not include passport numbers, bank details or full visa documents in an initial enquiry.</p></div></section>`
-  };
-  sections['index.html']+=`<section class="section"><div class="wrap partner-section"><div class="intro"><div><div class="label" data-en="Strategic partners" data-zh="战略合作伙伴">Strategic partners</div><h2 data-en="Strong connections create more possibilities." data-zh="稳固的合作连接，带来更多可能。">Strong connections create more possibilities.</h2></div><p data-en="We value our strategic partnerships across employment, finance, technology, architecture and hospitality. These relationships broaden the perspectives and networks we can bring to our work." data-zh="我们珍视在就业、金融、科技、建筑及酒店服务等领域建立的战略合作关系。多元合作网络为我们的工作带来更广阔的视角与资源。">We value our strategic partnerships across employment, finance, technology, architecture and hospitality. These relationships broaden the perspectives and networks we can bring to our work.</p></div><div class="partner-strip"><img src="partners-strip.png" alt="Strategic partners: JobABC, Sequoia Financial Group, Novatti, Acmé de la Vie, Parallel Workshop Architects, and Ovolo Hotels and Resorts"></div></div></section>`;
-  sections['employers.html']+=`<section class="section"><div class="wrap"><div class="intro"><div><div class="label" data-en="Beyond the familiar pathways" data-zh="不局限于常见路径">Beyond the familiar pathways</div><h2 data-en="Experienced support for complex workforce matters." data-zh="以专业经验支持复杂用工与移民个案。">Experienced support for complex workforce matters.</h2></div><p data-en="Our work is not limited to the most familiar employer-sponsored visas. We can assess other visa matters and challenging cases in light of the employer’s needs, the candidate’s circumstances and current requirements." data-zh="我们的工作不局限于常见的雇主担保签证；也可结合企业需求、候选人情况与现行要求，评估其他签证事务及较复杂个案。">Our work is not limited to the most familiar employer-sponsored visas. We can assess other visa matters and challenging cases in light of the employer’s needs, the candidate’s circumstances and current requirements.</p></div><div class="grid3"><article class="audience"><div class="label" data-en="Careful review" data-zh="审慎评估">Careful review</div><h3 data-en="Start with the facts." data-zh="从事实出发。">Start with the facts.</h3><p data-en="Understand the business, role, candidate profile and relevant history before discussing options." data-zh="在讨论方案前，先了解企业、岗位、候选人背景与相关经历。">Understand the business, role, candidate profile and relevant history before discussing options.</p></article><article class="audience"><div class="label" data-en="Broader experience" data-zh="多元案件经验">Broader experience</div><h3 data-en="Look beyond one visa category." data-zh="不只看单一签证类别。">Look beyond one visa category.</h3><p data-en="The appropriate scope of support depends on the particular matter; some cases require careful analysis of intersecting requirements." data-zh="具体服务范围取决于案件本身；部分个案需要审慎分析相互关联的多项要求。">The appropriate scope of support depends on the particular matter; some cases require careful analysis of intersecting requirements.</p></article><article class="audience"><div class="label" data-en="Clear next steps" data-zh="明确后续安排">Clear next steps</div><h3 data-en="Know what can be addressed." data-zh="明确可处理的重点。">Know what can be addressed.</h3><p data-en="We explain potential options, information needs and next steps without promising a hiring or visa outcome." data-zh="我们说明可能方案、所需信息与下一步安排，不对招聘或签证结果作出保证。">We explain potential options, information needs and next steps without promising a hiring or visa outcome.</p></article></div></div></section>`;
-  sections['talent.html']+=`<section class="section"><div class="wrap"><div class="pathway-copy" style="padding:0;max-width:820px"><div class="label" data-en="Broader migration experience" data-zh="更广泛的移民服务经验">Broader migration experience</div><h2 data-en="Your circumstances may involve more than employer sponsorship." data-zh="你的情况，可能不只涉及雇主担保。">Your circumstances may involve more than employer sponsorship.</h2><p style="color:var(--muted)" data-en="Alongside employer-sponsored matters, our team can assess other visa enquiries and complex cases. We draw on professional skills and experience to understand the details, explain relevant options and identify a considered next step." data-zh="除雇主担保相关事务外，团队也可评估其他签证咨询与复杂个案。我们结合专业技能和实践经验了解细节、说明相关选择，并梳理审慎的下一步。">Alongside employer-sponsored matters, our team can assess other visa enquiries and complex cases. We draw on professional skills and experience to understand the details, explain relevant options and identify a considered next step.</p><p class="note" data-en="Any advice depends on your individual circumstances and current requirements. No visa outcome is guaranteed." data-zh="具体建议取决于个人情况与当时要求，不保证签证结果。">Any advice depends on your individual circumstances and current requirements. No visa outcome is guaranteed.</p></div></div></section>`;
-  sections['approach.html']+=`<section class="section dark"><div class="wrap"><div class="intro"><div><div class="label" data-en="Complex matters, considered carefully" data-zh="复杂个案，审慎处理">Complex matters, considered carefully</div><h2 data-en="Experience beyond the most familiar pathways." data-zh="不止于常见路径的专业经验。">Experience beyond the most familiar pathways.</h2></div><p data-en="Our professional skills and experience are well suited to complex cases. We also assist with visa matters beyond employer-sponsored pathways, assessing each case on its own facts." data-zh="凭借专业技能与实践经验，我们适合处理难度较高的个案；服务也不限于雇主担保，会根据具体情况评估其他签证事务。">Our professional skills and experience are well suited to complex cases. We also assist with visa matters beyond employer-sponsored pathways, assessing each case on its own facts.</p></div><div class="steps"><article class="step"><small>01</small><div><h3 data-en="Understand the full picture" data-zh="了解完整背景">Understand the full picture</h3><p data-en="Review relevant history, objectives, timing and the details that make each matter different." data-zh="梳理相关经历、目标、时间安排，以及案件中的具体情况。">Review relevant history, objectives, timing and the details that make each matter different.</p></div></article><article class="step"><small>02</small><div><h3 data-en="Identify issues and options" data-zh="识别问题与可选方案">Identify issues and options</h3><p data-en="Consider the applicable requirements and explain potential next steps in clear terms." data-zh="结合适用要求进行分析，并清晰说明可能的下一步。">Consider the applicable requirements and explain potential next steps in clear terms.</p></div></article><article class="step"><small>03</small><div><h3 data-en="Prepare with care" data-zh="审慎准备案件">Prepare with care</h3><p data-en="Where engaged, coordinate evidence and case preparation around the circumstances and relevant criteria." data-zh="如受委托，将结合具体情况与相关标准，协助协调证据和案件准备。">Where engaged, coordinate evidence and case preparation around the circumstances and relevant criteria.</p></div></article></div><p class="note" data-en="The appropriate service and any available visa options depend on the individual circumstances and current law; no outcome is guaranteed." data-zh="适用服务及可选签证路径取决于个人情况与现行法律要求，不保证任何结果。">The appropriate service and any available visa options depend on the individual circumstances and current law; no outcome is guaranteed.</p></div></section>`;
-  sections['stories.html']+=`<section class="section dark"><div class="wrap"><div class="label" data-en="Complex cases are never one-size-fits-all" data-zh="复杂个案没有一套通用答案">Complex cases are never one-size-fits-all</div><h2 data-en="Professional judgement for the details that matter." data-zh="专业判断，关注案件中的关键细节。">Professional judgement for the details that matter.</h2><p style="max-width:760px;color:#c1d2cc" data-en="The team’s experience extends beyond the employer-sponsored matters shown here. We also work across other visa matters and more challenging cases, taking time to understand the facts, identify relevant considerations and prepare a considered response." data-zh="团队经验不限于本页展示的雇主担保案件，也涉及其他签证事务及较复杂个案。我们会先了解实际情况、识别相关重点，再审慎规划处理方式。">The team’s experience extends beyond the employer-sponsored matters shown here. We also work across other visa matters and more challenging cases, taking time to understand the facts, identify relevant considerations and prepare a considered response.</p><a class="button" style="margin-top:24px" href="contact.html"><span data-en="Discuss a complex matter ↗︎" data-zh="沟通复杂个案 ↗︎">Discuss a complex matter ↗︎</span></a></div></section>`;
-  sections['employers.html']+=`<section class="section soft"><div class="wrap"><div class="intro"><div><div class="label" data-en="Employer sponsorship" data-zh="雇主担保专题">Employer sponsorship</div><h2 data-en="A shared process for employers and professionals." data-zh="让企业与专业人才都看得清的担保流程。">A shared process for employers and professionals.</h2></div><p data-en="Explore how employer-sponsored pathways such as subclass 482 and 186 may fit into a wider workforce and migration plan." data-zh="了解 482、186 等雇主担保路径如何结合企业用工与人才的实际情况进行规划。">Explore how employer-sponsored pathways such as subclass 482 and 186 may fit into a wider workforce and migration plan.</p></div><a class="button" href="sponsorship.html"><span data-en="Explore employer sponsorship" data-zh="了解雇主担保服务">Explore employer sponsorship</span></a></div></section>`;
-  sections['talent.html']+=`<section class="section soft"><div class="wrap"><div class="intro"><div><div class="label" data-en="Employer sponsorship" data-zh="雇主担保专题">Employer sponsorship</div><h2 data-en="Understand the pathway from both sides." data-zh="从企业与人才双方了解雇主担保。">Understand the pathway from both sides.</h2></div><p data-en="If you are exploring sponsored work, learn how the employer’s role, your experience and the visa pathway connect—including subclass 482 and 186." data-zh="如果你正在了解雇主担保工作，可以先看看企业职责、个人经验与签证路径如何衔接，包括 482 与 186。">If you are exploring sponsored work, learn how the employer’s role, your experience and the visa pathway connect—including subclass 482 and 186.</p></div><a class="button" href="sponsorship.html"><span data-en="Explore employer sponsorship" data-zh="了解雇主担保服务">Explore employer sponsorship</span></a></div></section>`;
-  const section=sections[page];
-  if(section){
-    if(cta)cta.insertAdjacentHTML('beforebegin',section);
-    else main.insertAdjacentHTML('beforeend',section);
-  }
-  if(page==='contact.html'){
-    const offices=[...main.querySelectorAll('.office')];
-    const officeDetails=[
-      {address:'121, 847 Whitehorse Road<br>Box Hill, Victoria 3128',phone:'+61 430 907 019',tel:'+61430907019',email:'info@hiremiiglobal.com'},
-      {address:'L1/251 St Georges Tce<br>Perth, Western Australia 6000',phone:'+61 3 9415 4000',tel:'+61394154000'},
-      {address:'Room 807A, Building B, Zhongshan SOHO<br>No. 1065 Zhongshan West Road<br>Changning District, Shanghai',phone:'+86 137 6139 5387',tel:'+8613761395387'}
-    ];
-    offices.forEach((office,index)=>{
-      const details=officeDetails[index];
-      const paragraph=office.querySelector('p');
-      if(!details||!paragraph)return;
-      paragraph.innerHTML=`<span class="office-detail"><strong data-en="Address:" data-zh="地址：">Address:</strong> ${details.address}</span>${details.phone?`<span class="office-detail"><strong data-en="Phone:" data-zh="电话：">Phone:</strong> <a href="tel:${details.tel}">${details.phone}</a></span>`:''}${details.email?`<span class="office-detail"><strong data-en="Email:" data-zh="邮箱：">Email:</strong> <a href="mailto:${details.email}">${details.email}</a></span>`:''}`;
-    });
+(() => {
+  const root = document.documentElement;
+  const languageButton = document.querySelector('[data-language-toggle]');
+  const menuButton = document.querySelector('.menu');
+  const navigation = document.querySelector('.nav');
+  const form = document.querySelector('#enquiry-form');
 
-    const enquiry=document.querySelector('.form-demo');
-    if(enquiry){
-      enquiry.innerHTML=`<form class="enquiry-form" id="enquiry-form">
-        <div class="form-grid">
-          <label class="field"><span data-en="I am enquiring as" data-zh="咨询身份">I am enquiring as</span><select name="enquiryType" required><option value="" data-en="Select one" data-zh="请选择">Select one</option><option value="Employer" data-en="Employer" data-zh="企业">Employer</option><option value="Skilled professional" data-en="Skilled professional" data-zh="专业人才">Skilled professional</option></select></label>
-          <label class="field"><span data-en="I need help with" data-zh="咨询需求">I need help with</span><select name="requestType" required><option value="" data-en="Select one" data-zh="请选择">Select one</option><option value="Hiring and talent" data-en="Hiring and talent" data-zh="招聘与人才对接">Hiring and talent</option><option value="Finding an employer" data-en="Finding an employer" data-zh="寻找雇主">Finding an employer</option><option value="Migration advice" data-en="Migration advice" data-zh="移民建议">Migration advice</option><option value="A complex case" data-en="A complex case" data-zh="复杂个案">A complex case</option><option value="Other" data-en="Other" data-zh="其他">Other</option></select></label>
-          <label class="field"><span data-en="Name" data-zh="姓名">Name</span><input name="name" autocomplete="name" required data-placeholder-en="Your name" data-placeholder-zh="请输入姓名" placeholder="Your name"></label>
-          <label class="field"><span data-en="Company / occupation" data-zh="公司 / 职业">Company / occupation</span><input name="companyOccupation" autocomplete="organization-title" data-placeholder-en="Company or occupation (optional)" data-placeholder-zh="公司或职业（选填）" placeholder="Company or occupation (optional)"></label>
-          <label class="field"><span data-en="Email" data-zh="邮箱">Email</span><input type="email" name="email" autocomplete="email" required data-placeholder-en="you@example.com" data-placeholder-zh="你的邮箱地址" placeholder="you@example.com"></label>
-          <label class="field"><span data-en="Phone (optional)" data-zh="电话（选填）">Phone (optional)</span><input type="tel" name="phone" autocomplete="tel" data-placeholder-en="Phone number" data-placeholder-zh="联系电话" placeholder="Phone number"></label>
-          <label class="field full"><span data-en="Briefly tell us what you are looking for" data-zh="请简单说明你的需求">Briefly tell us what you are looking for</span><textarea name="message" maxlength="1500" required data-placeholder-en="A short summary is enough for an initial enquiry." data-placeholder-zh="简单介绍一下你的情况和希望获得的帮助即可。" placeholder="A short summary is enough for an initial enquiry."></textarea></label>
-        </div>
-        <button class="button enquiry-submit" type="submit"><span data-en="Prepare email" data-zh="发送邮件">Prepare email</span></button>
-        <p class="enquiry-status" id="enquiry-status" aria-live="polite" data-en="Your email app will open with these details ready to review and send." data-zh="系统会打开邮件应用，并填好以上内容供你检查后发送。">Your email app will open with these details ready to review and send.</p>
-      </form>`;
-      const form=enquiry.querySelector('#enquiry-form');
-      form.addEventListener('submit',event=>{
-        event.preventDefault();
-        if(!form.reportValidity())return;
-        const data=new FormData(form);
-        const language=root.dataset.lang==='zh'?'zh':'en';
-        const labels=language==='zh'?['咨询身份','咨询需求','姓名','公司 / 职业','邮箱','电话','需求说明']:['Enquiry type','What you need','Name','Company / occupation','Email','Phone','Enquiry details'];
-        const values=[data.get('enquiryType'),data.get('requestType'),data.get('name'),data.get('companyOccupation')||'—',data.get('email'),data.get('phone')||'—',data.get('message')];
-        const subject=language==='zh'?'网站咨询':'Website enquiry';
-        const body=labels.map((label,index)=>`${label}: ${values[index]}`).join('\n\n');
-        const status=document.querySelector('#enquiry-status');
-        if(status){status.textContent=language==='zh'?'邮件应用已打开（如未打开，请直接发送至 info@hiremiiglobal.com）。':'Your email app should open now. If it does not, email info@hiremiiglobal.com directly.';status.dataset.en=status.textContent;status.dataset.zh=status.textContent;}
-        window.location.href=`mailto:info@hiremiiglobal.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      });
+  function setLanguage(language) {
+    language = language === 'zh' ? 'zh' : 'en';
+    root.dataset.lang = language;
+    root.lang = language === 'zh' ? 'zh-Hans' : 'en';
+    document.querySelectorAll('[data-en][data-zh]').forEach(node => {
+      node.innerHTML = language === 'zh' ? node.dataset.zh : node.dataset.en;
+    });
+    document.querySelectorAll('[data-placeholder-en][data-placeholder-zh]').forEach(node => {
+      node.placeholder = language === 'zh' ? node.dataset.placeholderZh : node.dataset.placeholderEn;
+    });
+    if (languageButton) {
+      languageButton.textContent = language === 'en' ? '中文' : 'English';
+      languageButton.setAttribute('aria-label', language === 'en' ? 'Switch to Chinese' : '切换为英文');
     }
+    updateMenuLabel();
+    try { localStorage.setItem('aqyr-demo-language', language); } catch {}
   }
-}
-addPageDepth();
-document.querySelectorAll('.brand small').forEach(node=>{
-  node.dataset.en='Global Service';
-  node.dataset.zh='全球服务';
-});
-document.title=document.title.replace(/\s\|\sAQYR$/,' | AQYR Global Service');
-document.querySelectorAll('.footer span').forEach(node=>{
-  const text=node.textContent.trim();
-  if(text==='© 2026 Hiremii Limited · ABN 48 642 994 214')node.textContent='© 2026 AQYR Global Service';
-});
-const copySwaps=new Map([
-  ['For employers',['Employers','企业解决方案']],
-  ['For talent',['Professionals','专业人才']],
-  ['Talent',['Professionals','专业人才']],
-  ['How we connect',['Our Approach','服务方式']],
-  ['Our experience',['Case Experience','项目经验']],
-  ['Our people',['Our Team','团队介绍']],
-  ['Start a conversation',['Contact','联系我们']],
-  ['Start a consultation',['Contact','联系我们']],
-  ['Local presence across Australia and China.',['Offices and contact details','办公室地址与联系方式']],
-  ['澳洲与中国的本地服务网络。',['办公室地址与联系方式','办公室地址与联系方式']],
-  ['The right people.<br><span>The right opportunity.</span>',['Complex workforce challenges.<br><span>Thoughtful end-to-end solutions.</span>','复杂用工问题，<br><span>全流程专业解决方案。</span>']],
-  ['We help Australian businesses find skilled employees, and help professionals connect with suitable employers. Our team then guides the employer-sponsored migration pathway.',['Employer sponsorship is one part of the solution. We help Australian businesses assess workforce needs, connect with talent and coordinate hiring, sponsorship and case preparation through one end-to-end advisory process.','雇主担保只是解决方案的一部分。我们帮助澳洲企业评估用工需求、对接人才，并统筹招聘、担保与案件准备，提供全流程咨询支持。']],
-  ['Whether you need talent or an opportunity, start here.',['One advisory partner from workforce challenge to solution.','从用工难题到解决方案，全程专业协作。']],
-  ['Our team then guides the employer-sponsored migration pathway.',['Our team coordinates the relevant hiring and sponsorship steps.','由专业团队统筹相关招聘与担保环节。']],
-  ['We help businesses clarify their workforce needs, connect with skilled professionals and navigate the employer-sponsored migration process.',['From workforce assessment and role planning to talent connection, sponsorship strategy and case coordination, we help employers bring the moving parts together.','从用工评估、岗位规划、人才对接，到担保策略与案件协调，我们帮助企业统筹招聘过程中的各个环节。']],
-  ['Our employer and skilled-worker relationships let us support both sides of the conversation, with the migration expertise to help shape the next steps.',['One advisory relationship brings workforce planning, talent connection and employer-sponsored hiring support together.','通过一体化咨询服务，衔接用工规划、人才对接与雇主担保招聘支持。']],
-  ['Explore suitable skilled-professional connections across our Australia–China networks.',['Explore relevant talent connections across our wider professional network.','通过多元化专业网络，探索合适的人才资源。']],
-  ['Where appropriate, our team can advise on employer-sponsored options including the Skills in Demand visa (subclass 482) and Employer Nomination Scheme (subclass 186).',['Where relevant, we coordinate employer-sponsored pathways—including subclasses 482 and 186—alongside other visa matters and complex case requirements.','如适用，我们可统筹 482、186 等雇主担保路径，并结合其他签证事务及复杂个案需求提供支持。']],
-  ['A connected process',['End-to-end advisory','全流程咨询服务']],
-  ['We bring employers and skilled professionals into a thoughtful process—then connect the employment discussion with migration advice where relevant.',['We help employers move from identifying a workforce challenge to planning, talent connection and coordinated implementation—with specialist migration support where relevant.','我们协助企业从识别用工难题开始，推进规划、人才对接与整体落地，并在适用时衔接移民专业支持。']],
-  ['A thoughtful match is more than a résumé and a vacancy.',['Solve the workforce challenge—not just fill a vacancy.','解决用工问题，而不只是填补一个职位。']],
-  ['We consider role requirements, experience, workplace context and expectations. When a sponsorship pathway is relevant, migration expertise joins the process.',['We bring workforce strategy, talent assessment, hiring coordination and relevant migration advice into one joined-up process.','我们把用工策略、人才评估、招聘协调与相关移民建议纳入同一套全流程服务。']],
-  ['Migration experience when it matters',['Specialist support when it matters','在关键环节提供专业支持']],
-  ['Common questions',['Plan your next step','规划你的下一步']],
-  ['Starting without an employer is still a conversation—not a promise.',['A clearer plan for your next career move.','为职业发展的下一步，制定更清晰的计划。']],
-  ['Can you guarantee a job or visa?',['How can your team support my next move?','你们如何帮助我规划下一步？']],
-  ['No. Hiring decisions belong to employers, and visa decisions are made by the relevant authorities. Advice depends on your circumstances and current requirements.',['We look at the bigger picture—from your experience and career goals to possible employer connections and relevant visa options. For complex matters, our team can assess the issues and coordinate a considered plan.','我们会从整体情况出发，了解你的经验与职业目标，探讨合适的雇主资源及相关签证选择。遇到复杂情况时，团队也可协助评估问题并统筹审慎的解决方案。']],
-  ['Connecting employers, talent and migration expertise.',['End-to-end workforce, talent and mobility advisory.','提供用工、人才与人才流动全流程咨询。']],
-  ['A clearer connection between workforce needs and skilled talent.',['End-to-end advisory for workforce challenges and talent mobility.','为用工难题与人才流动提供全流程咨询。']]
-]);
-document.querySelectorAll('[data-en][data-zh]').forEach(node=>{
-  const replacement=copySwaps.get(node.dataset.en);
-  if(replacement){node.dataset.en=replacement[0];node.dataset.zh=replacement[1]}
-});
-const legalFooter=document.querySelector('.footer-bottom');
-if(legalFooter&&!legalFooter.querySelector('.legal-links')){
-  const staticHtml=location.pathname.endsWith('.html');
-  const privacyHref=staticHtml?'privacy.html':'/privacy';
-  const termsHref=staticHtml?'terms.html':'/terms';
-  legalFooter.insertAdjacentHTML('beforeend',`<nav class="legal-links" aria-label="Legal"><a href="${privacyHref}" data-en="Privacy Policy" data-zh="隐私政策">Privacy Policy</a><a href="${termsHref}" data-en="Terms of Use" data-zh="使用条款">Terms of Use</a></nav>`);
-}
-let initialLanguage='en';
-try{initialLanguage=localStorage.getItem('aqyr-demo-language')||'en'}catch{}
-setLanguage(initialLanguage);
-if(languageButton)languageButton.addEventListener('click',()=>setLanguage(root.dataset.lang==='en'?'zh':'en'));
-if(menuButton&&navigation){menuButton.addEventListener('click',()=>navigation.classList.toggle('open'));navigation.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>navigation.classList.remove('open')))}
-if('IntersectionObserver'in window){
-  const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('on');revealObserver.unobserve(entry.target)}}),{threshold:.12});
-  document.querySelectorAll('.reveal').forEach(item=>revealObserver.observe(item));
-}else document.querySelectorAll('.reveal').forEach(item=>item.classList.add('on'));
+
+  function updateMenuLabel() {
+    const open = menuButton?.getAttribute('aria-expanded') === 'true';
+    menuButton?.setAttribute('aria-label', root.dataset.lang === 'zh'
+      ? (open ? '关闭导航菜单' : '打开导航菜单')
+      : (open ? 'Close navigation menu' : 'Open navigation menu'));
+  }
+
+  function closeMenu(returnFocus = false) {
+    navigation?.classList.remove('open');
+    menuButton?.setAttribute('aria-expanded', 'false');
+    updateMenuLabel();
+    if (returnFocus) menuButton?.focus();
+  }
+
+  let language = 'en';
+  try { language = localStorage.getItem('aqyr-demo-language') || 'en'; } catch {}
+  setLanguage(language);
+  languageButton?.addEventListener('click', () => setLanguage(root.dataset.lang === 'en' ? 'zh' : 'en'));
+  menuButton?.addEventListener('click', () => {
+    const open = navigation?.classList.toggle('open') || false;
+    menuButton.setAttribute('aria-expanded', String(open));
+    updateMenuLabel();
+  });
+  navigation?.querySelectorAll('a').forEach(link => {
+    if (new URL(link.getAttribute('href'), location.href).pathname === location.pathname) {
+      link.setAttribute('aria-current', 'page');
+    }
+    link.addEventListener('click', () => closeMenu());
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && navigation?.classList.contains('open')) closeMenu(true);
+  });
+  document.addEventListener('click', event => {
+    if (navigation?.classList.contains('open') && !event.target.closest('.top')) closeMenu();
+  });
+  window.matchMedia('(min-width: 1101px)').addEventListener('change', event => {
+    if (event.matches) closeMenu();
+  });
+
+  if (form) {
+    const requestedService = new URLSearchParams(location.search).get('service');
+    const requestSelect = form.querySelector('[name="requestType"]');
+    if (requestedService && [...requestSelect.options].some(option => option.value === requestedService)) {
+      requestSelect.value = requestedService;
+    }
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      const zh = root.dataset.lang === 'zh';
+      const data = new FormData(form);
+      const labels = zh ? ['咨询身份', '咨询需求', '姓名', '公司 / 职业', '邮箱', '电话', '需求说明']
+        : ['Enquiry type', 'What you need', 'Name', 'Company / occupation', 'Email', 'Phone', 'Enquiry details'];
+      const optionText = name => {
+        const selected = form.querySelector('[name="' + name + '"]').selectedOptions[0];
+        return zh ? selected.dataset.zh : selected.dataset.en;
+      };
+      const values = [optionText('enquiryType'), optionText('requestType'), data.get('name'),
+        data.get('companyOccupation') || '—', data.get('email'), data.get('phone') || '—', data.get('message')];
+      const subject = zh ? 'AQYR 网站咨询' : 'AQYR website enquiry';
+      const body = labels.map((label, index) => label + ': ' + values[index]).join('\n\n');
+      const status = form.querySelector('#enquiry-status');
+      if (status) {
+        status.dataset.en = 'Please send the draft from your email app. If it does not open, email info@hiremiiglobal.com directly.';
+        status.dataset.zh = '请在邮件应用中自行发送草稿。如未打开，请直接发送邮件至 info@hiremiiglobal.com。';
+        status.textContent = zh ? status.dataset.zh : status.dataset.en;
+      }
+      window.location.href = 'mailto:info@hiremiiglobal.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    });
+  }
+
+  // Content stays visible when JavaScript is unavailable; motion is progressive enhancement.
+  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('on');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.06 });
+    root.classList.add('motion-ready');
+    document.querySelectorAll('.reveal').forEach(node => observer.observe(node));
+  }
+})();

@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "sync:preview": "node scripts/sync-static.mjs",
+    "test:site": "node scripts/check-site.mjs"
   },
   "dependencies": {
     "next": "^16.1.0",
