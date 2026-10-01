@@ -13,6 +13,8 @@ for (const slug of files) {
     .replace(/href="\/style.css"/g, 'href="style.css"')
     .replace(/src="\/script.js"/g, 'src="script.js"')
     .replace(/src="\/(?!script.js)([^"]+)"/g, 'src="public/$1"');
+  source = source.replace(/srcset="([^"]+)"/g, (_, candidates) =>
+    `srcset="${candidates.replace(/(^|,\s*)\//g, '$1public/')}"`);
   await writeFile(resolve(root, slug + ".html"), source);
 }
 await writeFile(resolve(root, "script.js"), await readFile(resolve(root, "public", "script.js")));

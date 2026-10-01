@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "sync:preview": "node scripts/sync-static.mjs",
+    "prepare:media": "node scripts/prepare-media.mjs",
     "test:site": "node scripts/check-site.mjs"
   },
   "dependencies": {

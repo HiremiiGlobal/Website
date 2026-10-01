@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "../style.css";
-import { brandName, siteUrl } from "@/lib/site";
+import { brandName, shareImage, siteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -14,7 +14,11 @@ export const metadata: Metadata = {
     template: "%s | AQYR Global Service",
   },
   description:
-    "End-to-end workforce, talent and mobility advisory for employers and skilled professionals.",
+    "Workforce and Australian visa advisory for businesses and individuals, including employer sponsorship and complex cases.",
+  openGraph: { type: "website", siteName: brandName, title: brandName,
+    url: siteUrl, locale: "en_AU", images: [shareImage] },
+  twitter: { card: "summary_large_image", title: brandName,
+    images: [{ url: shareImage.url, alt: shareImage.alt }] },
 };
 
 export default function RootLayout({
