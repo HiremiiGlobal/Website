@@ -4,6 +4,20 @@
   const menuButton = document.querySelector('.menu');
   const navigation = document.querySelector('.nav');
   const form = document.querySelector('#enquiry-form');
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const readingProgress = document.createElement('div');
+  readingProgress.className = 'reading-progress';
+  readingProgress.setAttribute('aria-hidden', 'true');
+  const progressLine = document.createElement('span');
+  readingProgress.append(progressLine);
+  document.body.append(readingProgress);
+
+  const backToTop = document.createElement('button');
+  backToTop.type = 'button';
+  backToTop.className = 'back-to-top';
+  backToTop.hidden = true;
+  backToTop.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12l6-6 6 6M12 6v13"/></svg>';
+  document.body.append(backToTop);
 
   function setLanguage(language) {
     language = language === 'zh' ? 'zh' : 'en';
@@ -20,6 +34,9 @@
       languageButton.setAttribute('aria-label', language === 'en' ? 'Switch to Chinese' : '切换为英文');
     }
     updateMenuLabel();
+    backToTop.setAttribute('aria-label', language === 'en' ? 'Back to top' : '返回顶部');
+    backToTop.title = language === 'en' ? 'Back to top' : '返回顶部';
+    scheduleScrollUpdate();
     try { localStorage.setItem('aqyr-demo-language', language); } catch {}
   }
 
@@ -36,6 +53,37 @@
     updateMenuLabel();
     if (returnFocus) menuButton?.focus();
   }
+
+  const pageLinks = [...document.querySelectorAll('.page-jump a[href^="#"]')]
+    .map(link => ({ link, target: document.getElementById(link.hash.slice(1)) }))
+    .filter(item => item.target);
+  let scrollFrame = 0;
+  function updateScrollState() {
+    scrollFrame = 0;
+    const distance = Math.max(0, root.scrollHeight - window.innerHeight);
+    const progress = distance > 0 ? Math.min(1, Math.max(0, window.scrollY / distance)) : 0;
+    progressLine.style.transform = 'scaleX(' + progress + ')';
+    backToTop.hidden = window.scrollY < Math.max(600, window.innerHeight * 0.8);
+    let current = null;
+    pageLinks.forEach(item => {
+      if (item.target.getBoundingClientRect().top <= window.innerHeight * 0.35) current = item;
+    });
+    pageLinks.forEach(item => {
+      if (item === current) item.link.setAttribute('aria-current', 'location');
+      else item.link.removeAttribute('aria-current');
+    });
+  }
+  function scheduleScrollUpdate() {
+    if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScrollState);
+  }
+  window.addEventListener('scroll', scheduleScrollUpdate, { passive: true });
+  window.addEventListener('resize', scheduleScrollUpdate);
+  window.addEventListener('load', scheduleScrollUpdate);
+  if ('ResizeObserver' in window) new ResizeObserver(scheduleScrollUpdate).observe(document.body);
+  backToTop.addEventListener('click', () => {
+    document.querySelector('.brand')?.focus({ preventScroll: true });
+    window.scrollTo({ top: 0, behavior: motionPreference.matches ? 'instant' : 'smooth' });
+  });
 
   let language = 'en';
   try { language = localStorage.getItem('aqyr-demo-language') || 'en'; } catch {}
@@ -94,7 +142,47 @@
   }
 
   // Content stays visible when JavaScript is unavailable; motion is progressive enhancement.
-  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const caseCounter = document.querySelector('[data-count-to]');
+  if (caseCounter && 'IntersectionObserver' in window && !motionPreference.matches) {
+    const target = Number(caseCounter.dataset.countTo);
+    const numberNode = caseCounter.firstChild;
+    if (Number.isFinite(target) && target > 1 && numberNode?.nodeType === Node.TEXT_NODE) {
+      let countFrame = 0;
+      let completed = false;
+      const finishCount = () => {
+        cancelAnimationFrame(countFrame);
+        numberNode.nodeValue = String(target);
+        caseCounter.classList.remove('counting');
+        completed = true;
+      };
+      const counterObserver = new IntersectionObserver(entries => {
+        if (completed || !entries.some(entry => entry.isIntersecting)) return;
+        counterObserver.disconnect();
+        if (motionPreference.matches) return finishCount();
+        const started = performance.now();
+        caseCounter.classList.add('counting');
+        numberNode.nodeValue = '1';
+        const tick = now => {
+          if (motionPreference.matches) return finishCount();
+          const progress = Math.min(1, Math.max(0, (now - started) / 1100));
+          const eased = 1 - Math.pow(1 - progress, 3);
+          numberNode.nodeValue = String(Math.round(1 + (target - 1) * eased));
+          if (progress < 1) countFrame = requestAnimationFrame(tick);
+          else finishCount();
+        };
+        countFrame = requestAnimationFrame(tick);
+      }, { threshold: 0.5 });
+      counterObserver.observe(caseCounter);
+      motionPreference.addEventListener('change', event => {
+        if (event.matches) {
+          counterObserver.disconnect();
+          finishCount();
+        }
+      });
+    }
+  }
+
+  if ('IntersectionObserver' in window && !motionPreference.matches) {
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -104,6 +192,17 @@
       });
     }, { threshold: 0.06 });
     root.classList.add('motion-ready');
+    document.querySelectorAll('.grid2, .grid3, .specialism-grid, .team-support, .partner-grid').forEach(group => {
+      [...group.children].forEach((node, index) => {
+        if (node.matches('.reveal')) node.style.setProperty('--reveal-delay', Math.min(index % 3, 2) * 65 + 'ms');
+      });
+    });
     document.querySelectorAll('.reveal').forEach(node => observer.observe(node));
+    motionPreference.addEventListener('change', event => {
+      if (event.matches) {
+        root.classList.remove('motion-ready');
+        observer.disconnect();
+      }
+    });
   }
 })();

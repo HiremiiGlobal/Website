@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700&family=Rethink+Sans:wght@400;500;600;700&display=swap');
 :root{--night:#1f4434;--deep:#15231f;--mint:#45c487;--ink:#15231f;--muted:#52635b;--mist:#e4eedf;--white:#fafbf8;--line:#d1dab9;--max:1220px}
+/* Use native Chinese sans-serif fonts instead of a browser's serif fallback. */
+html[data-lang=zh] body{font-family:'Albert Sans','PingFang SC','Microsoft YaHei',Arial,sans-serif}
 *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:28px}body{margin:0;background:var(--white);color:var(--ink);font:16px/1.65 'Albert Sans',Arial,sans-serif}button,input,select,textarea{font:inherit}a{color:inherit;text-underline-offset:4px}img{max-width:100%;display:block}svg{display:block}button,a,input,select,textarea,summary{ -webkit-tap-highlight-color:transparent}:focus-visible{outline:3px solid #027d8a;outline-offset:5px}button{cursor:pointer}.wrap{width:min(var(--max),calc(100% - 64px));margin:auto}h1,h2,h3,h4{font-family:'Rethink Sans','Microsoft YaHei',Arial,sans-serif;letter-spacing:-.03em;font-weight:600;text-wrap:balance;overflow-wrap:normal;word-break:normal}h2{font-size:clamp(30px,3.3vw,44px);line-height:1.16;margin:0;color:var(--night)}h3{line-height:1.25}p{margin:16px 0;text-wrap:pretty}.skip-link{position:fixed;top:12px;left:24px;z-index:30;padding:10px 18px;border-radius:16px;background:white;transform:translateY(-150%)}.skip-link:focus{transform:none}
 .top{position:relative;z-index:10;display:flex;align-items:center;gap:22px;height:76px;width:min(1380px,calc(100% - 48px));margin:16px auto -92px;padding:12px 22px;background:var(--white);border:1px solid #ffffff70;border-radius:50px;box-shadow:0 5px 25px #061e1212}
 .brand{display:flex;align-items:center;gap:14px;text-decoration:none;flex-shrink:0}.brand img{width:150px;height:40px;object-fit:contain}.brand small{padding-left:14px;border-left:1px solid var(--line);text-transform:uppercase;letter-spacing:.16em;font-size:9px;line-height:1.2;white-space:nowrap;color:var(--night)}
@@ -73,6 +75,8 @@
 .experience-volume{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:44px;background:var(--night);color:#fff}
 .experience-number{font:600 clamp(70px,7.5vw,108px)/1 'Rethink Sans',Arial,sans-serif;letter-spacing:-.055em;color:var(--mint);margin:0 0 24px;white-space:nowrap}
 .experience-number span{font-size:.7em;vertical-align:10%;margin-left:3px}
+.experience-number{font-variant-numeric:tabular-nums;min-width:4ch}
+.experience-number.counting span{visibility:hidden}
 .experience-volume h3{font-size:25px;margin:0 0 12px;color:#fff}
 .experience-count-context{font-size:16px;color:#dbe8df;margin:0}
 .experience-tags{display:flex;gap:10px;margin-top:28px}
@@ -85,3 +89,49 @@
 @media(max-width:1100px){.experience-volume{padding:32px}.experience-insights{padding:32px}.experience-volume h3,.experience-insights h3{font-size:23px}}
 @media(max-width:767px){.experience-track{grid-template-columns:1fr}.experience-volume{padding:32px}.experience-number{font-size:82px;margin-bottom:18px}.experience-tags{margin-top:22px}}
 @media(max-width:600px){.experience-track{border-radius:22px}.experience-volume,.experience-insights{padding:26px}.experience-number{font-size:76px}.experience-volume h3,.experience-insights h3{font-size:22px}.experience-insights article+article{margin-top:24px;padding-top:24px}.experience-insights .experience-outcome-note{font-size:13px}}
+
+/* Quiet feedback and reading aids; no loading overlay or interaction blocking. */
+html[data-lang=zh] .faq-item summary{font-family:'Rethink Sans','PingFang SC','Microsoft YaHei',Arial,sans-serif}
+.motion-ready .reveal{transition-delay:var(--reveal-delay,0ms)}
+.motion-ready .hero-content{animation:hero-enter .65s ease-out both}
+.motion-ready .hero-photo{animation:hero-enter .75s .1s ease-out both}
+.hero-visual{animation:none}
+.link-icon{transition:transform .22s ease}
+.audience,.office,.person,.case-study,.specialism-card{transition:border-color .25s,box-shadow .25s}
+.nav a:not(.nav-cta){text-underline-offset:8px;text-decoration-thickness:2px}
+.faq-item{transition:background .2s}
+.faq-item summary{transition:color .2s}
+.faq-mark:after{transition:transform .2s}
+.faq-item[open]{background:#1f443404}
+.faq-item[open] summary{color:#236c49}
+.faq-item[open] p{animation:answer-enter .25s ease-out}
+.field input,.field select,.field textarea{transition:border-color .2s,background .2s,box-shadow .2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#236c49;background:#fff;box-shadow:0 0 0 3px #45c48718}
+.reading-progress{position:fixed;top:0;left:0;width:100%;height:3px;z-index:25;pointer-events:none}
+.reading-progress span{display:block;width:100%;height:100%;background:var(--mint);transform:scaleX(0);transform-origin:left}
+.back-to-top{position:fixed;right:24px;bottom:24px;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:15;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border:1px solid #ffffff80;border-radius:50%;background:var(--night);color:#fff;box-shadow:0 4px 18px #15231f24;transition:background .2s}
+.back-to-top[hidden]{display:none}.back-to-top svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.back-to-top:hover{background:#2b5b46}
+.page-jump a{transition:background .2s,border-color .2s}
+.page-jump a[aria-current=location]{background:var(--night);border-color:var(--night);color:#fff}
+@keyframes hero-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes answer-enter{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media(hover:hover) and (pointer:fine){
+  .audience:hover,.office:hover,.person:hover,.case-study:hover,.specialism-card:hover{border-color:#236c4966;box-shadow:0 10px 30px #1f44340a}
+  a:hover>.link-icon,button:hover>.link-icon{transform:translate(2px,-2px)}
+  .nav a:not(.nav-cta):hover{text-decoration:underline}
+  .faq-item summary:hover{color:#236c49}
+}
+@media(max-width:600px){
+  .person,.team-support .person{grid-template-columns:96px minmax(0,1fr);grid-template-rows:auto 1fr auto;gap:7px 18px;padding:20px}
+  .person img,.team-support .person img{grid-column:1;grid-row:1/3;width:96px}
+  .person>div,.team-support .person>div{display:contents}
+  .person h3,.team-support .person h3{grid-column:2;grid-row:1;font-size:22px;margin:0;align-self:start}
+  .person .role,.team-support .person .role{grid-column:2;grid-row:2;margin:0;align-self:start}
+  .person .bio,.team-support .person .bio{grid-column:1/-1;grid-row:3;margin-top:9px;max-width:none}
+  .back-to-top{right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:44px;height:44px}
+}
+@media(prefers-reduced-motion:reduce){
+  .motion-ready .hero-content,.motion-ready .hero-photo,.faq-item[open] p{animation:none}
+  .motion-ready .reveal,.link-icon,.audience,.office,.person,.case-study,.specialism-card,.faq-item,.faq-item summary,.faq-mark:after,.field input,.field select,.field textarea,.back-to-top,.page-jump a{transition:none}
+}
