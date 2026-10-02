@@ -1,6 +1,6 @@
 {
   "purpose": "Editorial scene photography, not AQYR staff, clients, offices or case outcomes. Actual team portraits remain in public/team.",
-  "retrieved": "2026-10-01",
+  "retrieved": "2026-10-02",
   "photos": [
     {
       "name": "consultation",
@@ -35,7 +35,7 @@
       "source": "https://www.pexels.com/photo/group-of-cheerful-businesspeople-discussing-strategy-5324958/",
       "download": "https://images.pexels.com/photos/5324958/pexels-photo-5324958.jpeg?auto=compress&w=2000&q=90",
       "license": "https://www.pexels.com/license/",
-      "placement": "Homepage hero: a friendly professional conversation, not AQYR staff or clients",
+      "placement": "Previous homepage conversation hero, retained as an unused source asset",
       "attributionRequired": false
     },
     {
@@ -44,7 +44,25 @@
       "source": "https://www.pexels.com/photo/women-sitting-on-table-with-cups-of-coffee-and-laptop-4340139/",
       "download": "https://images.pexels.com/photos/4340139/pexels-photo-4340139.jpeg?auto=compress&w=2000&q=90",
       "license": "https://www.pexels.com/license/",
-      "placement": "Individuals and visas hero: an informal one-to-one conversation, not AQYR staff or clients",
+      "placement": "Previous individuals conversation hero, retained as an unused source asset",
+      "attributionRequired": false
+    },
+    {
+      "name": "city-reflections",
+      "photographer": "Denise Jans",
+      "source": "https://unsplash.com/photos/low-angle-photography-of-glass-buildings-JKPTwBEMSFc",
+      "download": "https://images.unsplash.com/photo-1545044805-51a3f9494ac9?fm=jpg&fit=max&w=2000&q=90",
+      "license": "https://unsplash.com/license",
+      "placement": "Homepage hero: architectural reflections in Melbourne, not an AQYR office or software product",
+      "attributionRequired": false
+    },
+    {
+      "name": "individual-city",
+      "photographer": "niko n",
+      "source": "https://unsplash.com/photos/person-crossing-street-between-tall-buildings-mbm61IKlS5Y",
+      "download": "https://images.unsplash.com/photo-1766506366613-22641a82be26?fm=jpg&fit=max&w=2000&q=90",
+      "license": "https://unsplash.com/license",
+      "placement": "Individuals and visas hero: a candid personal city-life perspective in Melbourne, not an AQYR client",
       "attributionRequired": false
     }
   ]
