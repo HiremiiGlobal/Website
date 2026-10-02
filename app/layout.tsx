@@ -10,11 +10,11 @@ export const metadata: Metadata = {
     apple: "/aqyr-github-avatar.png",
   },
   title: {
-    default: "AQYR Global Service",
-    template: "%s | AQYR Global Service",
+    default: "AQYR Global Services",
+    template: "%s | AQYR Global Services",
   },
   description:
-    "Australian visa, employer sponsorship and workforce support from AQYR Global Service, a subsidiary of AQYR.",
+    "Australian visa, employer sponsorship and workforce support from AQYR Global Services, a subsidiary of AQYR.",
   openGraph: { type: "website", siteName: brandName, title: brandName,
     url: siteUrl, locale: "en_AU", images: [shareImage] },
   twitter: { card: "summary_large_image", title: brandName,

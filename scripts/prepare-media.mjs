@@ -12,9 +12,13 @@ const logo = (await readFile(resolve(root, "public/aqyr-logo.svg"), "utf8"))
 const cover = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#fafbf8"/>
   ${logo}
-  <text x="600" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="46" font-weight="500" fill="#1f4434">AQYR Global Service</text>
+  <text x="600" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="46" font-weight="500" fill="#1f4434">AQYR Global Services</text>
 </svg>`;
 await sharp(Buffer.from(cover)).png().toFile(resolve(root, "public/share-cover.png"));
+if (process.argv.includes("--cover-only")) {
+  console.log("Prepared AQYR Global Services logo share cover.");
+  process.exit(0);
+}
 let originalBytes = 0, optimisedBytes = 0;
 for (const file of await readdir(resolve(root, "public/team"))) {
   if (!file.endsWith(".jpg")) continue;

@@ -9,11 +9,17 @@ const routes = ["", "employers", "talent", "sponsorship", "approach",
 const assets = new Set();
 const titles = new Set();
 const descriptions = new Set();
+const packageInfo = JSON.parse(await readFile(resolve(root, "package.json"), "utf8"));
+assert.equal(packageInfo.name, "aqyr-global-services", "Application package name must be plural");
+const readme = await readFile(resolve(root, "README.md"), "utf8");
+assert.match(readme, /^# AQYR Global Services\r?$/m, "README company name must be plural");
+assert.doesNotMatch(readme, /\bAQYR Global Service\b/i);
 for (const route of routes) {
   const response = await fetch(base + "/" + route);
   assert.equal(response.status, 200, route + " must load");
   const html = await response.text();
-  assert.match(html, /<title>[^<]*AQYR Global Service/);
+  assert.match(html, /<title>[^<]*AQYR Global Services/);
+  assert.doesNotMatch(html, /\bAQYR Global Service\b/, "Company name must be plural: " + route);
   assert.match(html, /name="description"/);
   const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
   const description = html.match(/name="description" content="([^"]+)"/)?.[1];
@@ -25,12 +31,12 @@ for (const route of routes) {
   const schema = [...html.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)]
     .map(([, json]) => JSON.parse(json));
   const organization = schema.flatMap((entry) => entry["@graph"] || [entry])
-    .find((entry) => entry["@type"] === "Organization" && entry.name === "AQYR Global Service");
+    .find((entry) => entry["@type"] === "Organization" && entry.name === "AQYR Global Services");
   assert(organization, "Company schema: " + route);
   assert.equal(organization.parentOrganization?.name, "AQYR");
   assert.equal(organization.parentOrganization?.url, "https://aqyr.ai");
   assert.match(organization.description, /subsidiary of AQYR/);
-  assert.match(html, /property="og:title" content="AQYR Global Service"/);
+  assert.match(html, /property="og:title" content="AQYR Global Services"/);
   assert.match(html, /property="og:image" content="https?:[^\"]*\/share-cover\.png"/);
   assert.match(html, /property="og:image:width" content="1200"/);
   assert.match(html, /property="og:image:height" content="630"/);
@@ -39,6 +45,7 @@ for (const route of routes) {
   assert.match(html, /id="main-content"/);
   assert.equal((html.match(/<h1\b/g) || []).length, 1, "One main heading: " + route);
   const source = await readFile(resolve(root, "content", (route || "index") + ".html"), "utf8");
+  assert.match(source, /data-en="Global Services"/);
   assert(!/src="https?:/i.test(source), "Images must be hosted locally: " + route);
   assert(!/[↗→↔]/u.test(source), "No emoji-prone text arrows: " + route);
   assert(!/再次确认|待审核|generated portraits|reconfirm roles/i.test(source));
@@ -46,7 +53,7 @@ for (const route of routes) {
   assert.match(source, /A subsidiary of AQYR\./);
   assert.match(source, /AQYR 旗下子公司。/);
   assert(!source.includes("Part of the AQYR group."), "Explicit subsidiary relationship: " + route);
-  if (route === "team") assert.match(source, /AQYR Global Service is a subsidiary of AQYR\./);
+  if (route === "team") assert.match(source, /AQYR Global Services is a subsidiary of AQYR\./);
   for (const [, src] of source.matchAll(/<img[^>]*src="([^"]+)"/g)) assets.add(src);
   for (const [, candidates] of source.matchAll(/srcset="([^"]+)"/g)) {
     for (const candidate of candidates.split(",")) assets.add(candidate.trim().split(/\s+/)[0]);
