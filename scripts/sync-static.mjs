@@ -3,11 +3,11 @@ import { resolve } from "node:path";
 
 // The deployed source is content/*.html. Root HTML files are local static previews.
 const root = resolve(import.meta.dirname, "..");
-const files = ["index", "employers", "talent", "sponsorship", "approach",
+const files = ["index", "about", "employers", "talent", "sponsorship", "approach",
   "stories", "team", "contact", "privacy", "terms"];
 for (const slug of files) {
   let source = await readFile(resolve(root, "content", slug + ".html"), "utf8");
-  source = source.replace(/href="\/(employers|talent|sponsorship|approach|stories|team|contact|privacy|terms)([?#][^"]*)?"/g,
+  source = source.replace(/href="\/(about|employers|talent|sponsorship|approach|stories|team|contact|privacy|terms)([?#][^"]*)?"/g,
     (_, page, suffix = "") => `href="${page}.html${suffix}"`);
   source = source.replace(/href="\/"/g, 'href="index.html"')
     .replace(/href="\/style.css"/g, 'href="style.css"')
@@ -18,4 +18,4 @@ for (const slug of files) {
   await writeFile(resolve(root, slug + ".html"), source);
 }
 await writeFile(resolve(root, "script.js"), await readFile(resolve(root, "public", "script.js")));
-console.log("Updated ten static preview pages and their shared script.");
+console.log(`Updated ${files.length} static preview pages and their shared script.`);

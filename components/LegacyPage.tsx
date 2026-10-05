@@ -3,6 +3,7 @@ import path from "node:path";
 
 type LegacyPageName =
   | "index.html"
+  | "about.html"
   | "employers.html"
   | "talent.html"
   | "sponsorship.html"

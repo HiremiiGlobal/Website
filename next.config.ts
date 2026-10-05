@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const legacyRoutes = ["employers", "talent", "sponsorship", "approach", "stories", "team", "contact", "privacy", "terms"];
+const legacyRoutes = ["about", "employers", "talent", "sponsorship", "approach", "stories", "team", "contact", "privacy", "terms"];
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1"],

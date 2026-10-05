@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const base = process.argv[2] || "http://127.0.0.1:3000";
-const routes = ["", "employers", "talent", "sponsorship", "approach",
+const routes = ["", "about", "employers", "talent", "sponsorship", "approach",
   "stories", "team", "contact", "privacy", "terms"];
 const assets = new Set();
 const titles = new Set();
@@ -53,6 +53,46 @@ for (const route of routes) {
   assert.match(source, /A subsidiary of AQYR\./);
   assert.match(source, /AQYR 旗下子公司。/);
   assert(!source.includes("Part of the AQYR group."), "Explicit subsidiary relationship: " + route);
+  assert.match(source, /href="\/about"/, "Company introduction link: " + route);
+  const primaryNavigation = source.match(/<nav class="nav"[\s\S]*?<\/nav>/)?.[0];
+  assert(primaryNavigation && !primaryNavigation.includes('href="/about"'), "Company introduction remains footer-only: " + route);
+  const compliance = source.match(/<div class="footer-compliance">([\s\S]*?)<\/div>/)?.[1];
+  assert(compliance, "Low-key registration details on every page: " + route);
+  assert.match(compliance, /ABN 23 619 566 040/);
+  assert.match(compliance, /ACN 619 566 040/);
+  assert.match(compliance, /MARN 1793302/);
+  assert.match(compliance, /Yuan \(Leon\) Gao/);
+  assert.match(compliance, /portal\.mara\.gov\.au/);
+  assert.match(compliance, /abr\.business\.gov\.au/);
+  if (route === "about") {
+    assert.match(source, /Prince Migration/);
+    assert.match(source, /2017/);
+    assert.match(source, /Hiremii Global Services/);
+    assert.match(source, /Hiremii Limited \(ASX:HMI\)/);
+    assert.match(source, /not a separately listed company/);
+    assert.match(source, /HIREMII GLOBAL SERVICES PTY LTD/);
+    assert.match(source, /class="section legal-section company-profile"/);
+    assert.match(source, /id="company-registration"/);
+    assert(!/knowledge graph|AI-powered recruitment platform/i.test(source));
+  }
+  if (route === "stories") {
+    assert.equal((source.match(/class="case-study case-detailed reveal"/g) || []).length, 7);
+    assert.equal((source.match(/class="section project-cases"/g) || []).length, 1);
+    assert(!/data-zh="历史案例"|SELECTED EXPERIENCE/.test(source), "Cases must share one presentation, not history/experience sections");
+    assert.deepEqual([...source.matchAll(/data-case-audience="([^"]+)"/g)].map(([, audience]) => audience),
+      ["business", "business", "business", "business", "individual", "individual", "individual"],
+      "Business cases must precede individual cases");
+    for (const [, article] of source.matchAll(/<article class="case-study case-detailed reveal"[^>]*>([\s\S]*?)<\/article>/g)) {
+      assert.match(article, /class="case-context"/);
+      assert.match(article, /class="case-work"/);
+      assert.match(article, /class="case-outcome"/);
+    }
+    assert.match(source, /Some examples draw on the work of our predecessor, Hiremii Global Services/);
+    assert.match(source, /id="historical-cases"/, "Keep earlier case links working");
+    assert.match(source, /Nomination approved without a further information request/);
+    assert.match(source, /not a visa grant/);
+    assert(!/Novatti|Sequoia|HealthLink|Crosstec|AUDD|\$82K|\$105K/i.test(source));
+  }
   if (route === "team") assert.match(source, /AQYR Global Services is a subsidiary of AQYR\./);
   for (const [, src] of source.matchAll(/<img[^>]*src="([^"]+)"/g)) assets.add(src);
   for (const [, candidates] of source.matchAll(/srcset="([^"]+)"/g)) {
@@ -85,4 +125,4 @@ const cover = Buffer.from(await coverResponse.arrayBuffer());
 assert.equal(cover.subarray(1, 4).toString(), "PNG");
 assert.equal(cover.readUInt32BE(16), 1200);
 assert.equal(cover.readUInt32BE(20), 630);
-console.log("PASS: ten pages, unique search metadata, subsidiary relationship, branded share image, navigation, redirects, sitemap, robots, responsive local images and shared runtime.");
+console.log(`PASS: ${routes.length} pages, unique search metadata, company introduction, 7 unified case studies with businesses before individuals, subsidiary relationship, branded share image, navigation, redirects, sitemap, robots, responsive local images and shared runtime.`);

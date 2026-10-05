@@ -15,11 +15,12 @@ export const shareImage = {
   type: "image/png",
 };
 export const pages = {
-  employers: { fileName: "employers.html", title: "Employer Sponsorship & Recruitment", description: "Recruitment and employer sponsorship support for Australian businesses, including workforce planning, 482 nominations and 186 visa matters." },
-  talent: { fileName: "talent.html", title: "Australian Visa Services for Individuals", description: "Australian visa advice and application support for individuals, including sponsored work, visitor, student, skilled and partner visa matters." },
+  about: { fileName: "about.html", title: "About Our Visa & Workforce Advisory Company", description: "Meet AQYR Global Services, a subsidiary of AQYR with service roots in Prince Migration and Hiremii Global Services, supporting Australian visas and workforce matters." },
+  employers: { fileName: "employers.html", title: "Employer Sponsorship & Recruitment", description: "Recruitment, 482 and 186 sponsorship, workforce preparation and Australian market-entry HR coordination for businesses." },
+  talent: { fileName: "talent.html", title: "Australian Visa Services for Individuals", description: "Australian visa support for individuals, alongside skills assessment preparation and education-to-career planning, tailored to your background." },
   sponsorship: { fileName: "sponsorship.html", title: "482 & 186 Direct Entry Visa Support", description: "Explore 482 Skills in Demand, 186 Direct Entry and TRT pathways, with employer nomination and visa preparation support for businesses and applicants." },
   approach: { fileName: "approach.html", title: "Our Visa & Sponsorship Support Process", description: "How we support visa and employer sponsorship matters: initial assessment, an agreed service scope, document preparation and ongoing communication." },
-  stories: { fileName: "stories.html", title: "482 & 186 Sponsorship Case Experience", description: "Experience handling 200+ employer-sponsored cases across 482 and 186, covering employer assessment, nomination preparation and visa application support." },
+  stories: { fileName: "stories.html", title: "482 & 186 Sponsorship Case Experience", description: "200+ employer-sponsored cases across 482 and 186, with anonymised historical examples of 186 nominations and business workforce support." },
   team: { fileName: "team.html", title: "Visa & Workforce Advisory Team", description: "Meet the migration, legal support and client service team at AQYR Global Services, a subsidiary of AQYR." },
   contact: { fileName: "contact.html", title: "Contact Our Visa & Workforce Team", description: "Contact our Melbourne, Perth or Shanghai team about Australian visas, 482 and 186 employer sponsorship, recruitment and complex visa matters." },
   privacy: { fileName: "privacy.html", title: "Privacy Policy", description: "How AQYR Global Services handles information when you visit our website or contact our team." },
