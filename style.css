@@ -79,6 +79,7 @@ html[data-lang=zh] body{font-family:'Albert Sans','PingFang SC','Microsoft YaHei
 .experience-number.counting span{visibility:hidden}
 .experience-volume h3{font-size:25px;margin:0 0 12px;color:#fff}
 .experience-count-context{font-size:16px;color:#dbe8df;margin:0}
+.experience-as-of{font-size:12px;line-height:1.5;color:#c3d8cc;margin:8px 0 0}
 .experience-tags{display:flex;gap:10px;margin-top:28px}
 .experience-tags span{font-size:14px;line-height:1;padding:10px 16px;border:1px solid #8de4b466;border-radius:999px;color:#dbe8df}
 .experience-insights{padding:38px 42px;min-width:0}
@@ -141,6 +142,7 @@ html[data-lang=zh] .faq-item summary{font-family:'Rethink Sans','PingFang SC','M
 .soft{background:linear-gradient(115deg,#edf3eb 0%,#e5efea 100%)}
 .dark{background:radial-gradient(ellipse at 100% 0%,#296a5840,transparent 65%),linear-gradient(115deg,#193c31,#18524b)}
 .intro{margin-bottom:44px}
+@media(max-width:600px){.page-talent .intro>p{text-wrap:balance}}
 .hero{background:radial-gradient(ellipse at 88% 25%,#43887455,transparent 56%),radial-gradient(ellipse at 10% 100%,#648d4d20,transparent 60%),linear-gradient(118deg,#183c30 10%,#1f4434 50%,#16514b);padding-bottom:100px}
 .hero:before{opacity:.35;mask-image:linear-gradient(90deg,transparent 25%,black)}
 .hero:after{top:auto;bottom:-220px;right:-140px;width:780px;height:520px;border:0;border-radius:50%;box-shadow:none;background:radial-gradient(ellipse,#8cd5b51c,transparent 70%);transform:rotate(-25deg)}
@@ -220,6 +222,11 @@ html[data-lang=zh] .faq-item summary{font-family:'Rethink Sans','PingFang SC','M
 .case-studies{gap:10px}
 .case-heading{border-bottom:0;margin-bottom:30px;padding-bottom:0}
 .case-heading h3{font-size:32px}
+.case-heading>div:first-child{min-width:0}
+.case-detailed{scroll-margin-top:28px}
+.case-legacy-anchor{position:absolute;top:0;scroll-margin-top:28px}
+.case-detailed .case-heading>.tag{flex-shrink:0;max-width:245px;white-space:normal}
+@media(max-width:767px){.case-detailed .case-heading{flex-direction:column;gap:16px}}
 .case-heading .label{color:var(--ochre)}
 .case-study .tag{background:#eee8dd;border:0;color:#71542d}
 .partner-logo{background:transparent;border:0;border-radius:0}
@@ -358,3 +365,14 @@ html[data-lang=zh] .faq-item summary{font-family:'Rethink Sans','PingFang SC','M
 @media(max-width:1100px){.company-narrative{gap:40px}.case-detail-grid{grid-template-columns:1fr 1.4fr;gap:28px}.case-outcome{grid-column:2}}
 @media(max-width:900px){.company-narrative{grid-template-columns:1fr;gap:28px}.company-facts{max-width:520px}.company-service-columns{gap:34px}}
 @media(max-width:600px){.company-service-columns,.case-detail-grid{grid-template-columns:1fr;gap:26px}.case-outcome{grid-column:auto}.company-facts{padding:26px}.company-service-columns h3{font-size:24px}.company-count{font-size:64px}.case-outcome{padding:22px}.case-detail-grid p{font-size:15px}}
+.visa-guide-answer{padding-bottom:24px;max-width:1080px}
+.visa-guide-answer p{margin:0 0 18px;max-width:960px}
+.visa-guide-answer p:last-child{margin-bottom:0}
+.visa-guide-source,.visa-official-link{font-size:13px;line-height:1.6;color:#28654d;text-underline-offset:4px}
+.visa-guidance-note{max-width:1020px;margin:24px 0 0;color:var(--muted);font-size:12px;line-height:1.7}
+.visa-service-grid{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:32px;padding:4px 0 24px}
+.visa-service-grid h3{font-size:17px;line-height:1.5;margin:0 0 12px;color:var(--night)}
+.visa-service-grid p{font-size:16px;line-height:1.75;margin:0}
+.visa-service-links{display:flex;align-items:center;gap:20px 32px;flex-wrap:wrap}
+.visa-service-links .card-link{margin:0}
+@media(max-width:800px){.visa-service-grid{grid-template-columns:1fr;gap:22px}.visa-service-grid p{max-width:680px}.visa-service-links{align-items:flex-start;flex-direction:column;gap:16px}.visa-guide-answer{padding-bottom:22px}}

@@ -88,6 +88,21 @@
   let language = 'en';
   try { language = localStorage.getItem('aqyr-demo-language') || 'en'; } catch {}
   setLanguage(language);
+  // Stored language and font loading can change the height above a shared case.
+  const initialCaseHash = location.hash;
+  const initialCaseTarget = document.getElementById(initialCaseHash.slice(1));
+  if (initialCaseTarget?.matches('.case-detailed, .case-legacy-anchor')) {
+    let userInteracted = false;
+    const markInteraction = () => { userInteracted = true; };
+    const events = ['pointerdown', 'wheel', 'touchstart', 'keydown'];
+    events.forEach(type => window.addEventListener(type, markInteraction, { once: true, passive: true }));
+    (document.fonts?.ready || Promise.resolve()).then(() => requestAnimationFrame(() => {
+      events.forEach(type => window.removeEventListener(type, markInteraction));
+      if (!userInteracted && location.hash === initialCaseHash) {
+        initialCaseTarget.scrollIntoView({ block: 'start', behavior: 'instant' });
+      }
+    }));
+  }
   languageButton?.addEventListener('click', () => setLanguage(root.dataset.lang === 'en' ? 'zh' : 'en'));
   menuButton?.addEventListener('click', () => {
     const open = navigation?.classList.toggle('open') || false;

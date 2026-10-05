@@ -36,6 +36,14 @@ When connecting a final domain, set `NEXT_PUBLIC_SITE_URL` to its HTTPS origin i
 
 The shared link preview uses `public/share-cover.png`, the original AQYR logo and the name AQYR Global Services. Open Graph and Twitter image settings are in `lib/site.ts`.
 
+The site-wide JSON-LD graph is maintained in `lib/structured-data.ts` and rendered by `app/layout.tsx`. It links the public brand to its legal entity, ABN/ACN, three offices, parent organization and Yuan (Leon) Gao. MARN 1793302 is an identifier of the person, not a company licence. Keep this data consistent with the visible company, contact and footer disclosures whenever registration or contact details change.
+
+## Visa guidance maintenance
+
+The practical 482 Core Skills, 186 Direct Entry and TRT questions are in `content/sponsorship.html`; the four individual visa guides are in `content/talent.html`. Both use server-rendered native accordions and the existing same-URL language switch. Each guide links to Home Affairs, with an official-guidance check date of 5 October 2026. This records source checking, not a claim of review or sign-off by a named adviser.
+
+Before publishing changes to eligibility guidance, recheck the linked official sources, update both languages and the check date, and run `pnpm sync:preview`. Income thresholds, visa charges and processing times are intentionally not hard-coded here. Exemptions, nomination requirements and the applicant's evidence still need a case-specific assessment; no outcome or invitation is guaranteed.
+
 ## Company introduction and case experience
 
 The footer links to `/about`, with an English/Chinese, text-focused company introduction similar to the legal pages. It is intentionally absent from the primary navigation. The service history distinguishes Prince Migration (established in 2017), the predecessor service brand Hiremii Global Services and the current AQYR subsidiary. Group background identifies Hiremii Limited (ASX:HMI) as the listed entity, not AQYR Global Services as a separately listed company. It does not claim that visa advice is automated or that the subsidiary owns the group's technology platform. Stock prices, market-cap figures and historical board lists are omitted.

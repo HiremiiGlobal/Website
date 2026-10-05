@@ -36,6 +36,24 @@ for (const route of routes) {
   assert.equal(organization.parentOrganization?.name, "AQYR");
   assert.equal(organization.parentOrganization?.url, "https://aqyr.ai");
   assert.match(organization.description, /subsidiary of AQYR/);
+  assert.equal(organization.legalName, "HIREMII GLOBAL SERVICES PTY LTD");
+  assert.equal(organization.taxID, "23619566040");
+  assert.deepEqual(organization.identifier.map(({ propertyID, value }) => [propertyID, value]),
+    [["ABN", "23619566040"], ["ACN", "619566040"]]);
+  assert(organization.sameAs.includes("https://abr.business.gov.au/ABN/View?abn=23619566040"));
+  const graph = schema.flatMap((entry) => entry["@graph"] || [entry]);
+  const agent = graph.find((entry) => entry["@id"] === organization.employee["@id"]);
+  assert.equal(agent?.["@type"], "Person");
+  assert.equal(agent.name, "Yuan Gao");
+  assert.equal(agent.alternateName, "Leon Gao");
+  assert.equal(agent.worksFor["@id"], organization["@id"]);
+  assert.deepEqual(agent.identifier, { "@type": "PropertyValue", propertyID: "MARN", value: "1793302" });
+  assert(agent.sameAs.some((url) => url.startsWith("https://portal.mara.gov.au/")));
+  const offices = organization.location.map((ref) => graph.find((entry) => entry["@id"] === ref["@id"]));
+  assert.equal(offices.length, 3);
+  assert.deepEqual(offices.map((office) => office?.address.addressCountry), ["AU", "AU", "CN"]);
+  assert.equal(organization.address.postalCode, "3128");
+  assert.deepEqual(offices[0].address, organization.address);
   assert.match(html, /property="og:title" content="AQYR Global Services"/);
   assert.match(html, /property="og:image" content="https?:[^\"]*\/share-cover\.png"/);
   assert.match(html, /property="og:image:width" content="1200"/);
@@ -94,6 +112,28 @@ for (const route of routes) {
     assert(!/Novatti|Sequoia|HealthLink|Crosstec|AUDD|\$82K|\$105K/i.test(source));
   }
   if (route === "team") assert.match(source, /AQYR Global Services is a subsidiary of AQYR\./);
+  if (route === "sponsorship") {
+    for (const id of ["sponsorship-stages", "482-requirements", "186-de-requirements",
+      "186-trt-requirements", "employer-documents"]) {
+      assert(source.includes('class="faq-item" id="' + id + '"'), "Practical sponsorship FAQ: " + id);
+    }
+    assert.match(source, /5 October 2026/);
+    assert.match(source, /core-skills-stream/);
+    assert.match(source, /direct-entry-stream/);
+    assert.match(source, /temporary-residence-transition-stream/);
+  }
+  if (route === "talent") {
+    for (const id of ["visitor-visas", "student-visas", "skilled-visas", "partner-family-visas"]) {
+      const block = source.match(new RegExp('<details[^>]*id="' + id + '"[^>]*>([\\s\\S]*?)</details>'))?.[1];
+      assert(block, "Individual visa guide: " + id);
+      for (const heading of ["When to get in touch", "How we can help", "Before our first conversation"]) {
+        assert(block.includes('data-en="' + heading + '"'), id + ": " + heading);
+      }
+      assert.match(block, /data-zh=/);
+      assert.match(block, /https:\/\/immi\.homeaffairs\.gov\.au\//);
+      assert.match(block, /href="\/contact\?service=/);
+    }
+  }
   for (const [, src] of source.matchAll(/<img[^>]*src="([^"]+)"/g)) assets.add(src);
   for (const [, candidates] of source.matchAll(/srcset="([^"]+)"/g)) {
     for (const candidate of candidates.split(",")) assets.add(candidate.trim().split(/\s+/)[0]);
