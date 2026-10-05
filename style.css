@@ -375,4 +375,15 @@ html[data-lang=zh] .faq-item summary{font-family:'Rethink Sans','PingFang SC','M
 .visa-service-grid p{font-size:16px;line-height:1.75;margin:0}
 .visa-service-links{display:flex;align-items:center;gap:20px 32px;flex-wrap:wrap}
 .visa-service-links .card-link{margin:0}
+/* Keep same-row service links aligned without fixing card or text heights. */
+.audience:has(>.card-link){display:flex;flex-direction:column;align-items:flex-start}
+.audience>.card-link:last-child{margin-top:auto;padding-top:24px}
+/* Comfortable touch targets without turning editorial links into buttons. */
+@media(max-width:600px){
+  .footer-links>div{gap:2px}
+  .footer-links strong{margin-bottom:10px}
+  .footer-links a,.legal-links a{display:inline-flex;align-items:center;min-height:44px}
+  .legal-links{flex-wrap:wrap;gap:8px 22px}
+  .page-jump a{display:inline-flex;align-items:center;min-height:44px}
+}
 @media(max-width:800px){.visa-service-grid{grid-template-columns:1fr;gap:22px}.visa-service-grid p{max-width:680px}.visa-service-links{align-items:flex-start;flex-direction:column;gap:16px}.visa-guide-answer{padding-bottom:22px}}

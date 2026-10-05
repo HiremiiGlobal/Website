@@ -18,6 +18,8 @@ for (const route of routes) {
   const response = await fetch(base + "/" + route);
   assert.equal(response.status, 200, route + " must load");
   const html = await response.text();
+  assert.doesNotMatch(html, /你/, "Chinese copy uses polite address: " + route);
+  assert.doesNotMatch(html, /Official guidance checked on|官方指引核对日期|Last updated:|最后更新：/, "No public editorial date labels: " + route);
   assert.match(html, /<title>[^<]*AQYR Global Services/);
   assert.doesNotMatch(html, /\bAQYR Global Service\b/, "Company name must be plural: " + route);
   assert.match(html, /name="description"/);
@@ -117,7 +119,6 @@ for (const route of routes) {
       "186-trt-requirements", "employer-documents"]) {
       assert(source.includes('class="faq-item" id="' + id + '"'), "Practical sponsorship FAQ: " + id);
     }
-    assert.match(source, /5 October 2026/);
     assert.match(source, /core-skills-stream/);
     assert.match(source, /direct-entry-stream/);
     assert.match(source, /temporary-residence-transition-stream/);
@@ -155,6 +156,7 @@ assert.equal((sitemap.match(/<loc>/g) || []).length, routes.length);
 assert(!sitemap.includes(".html"));
 assert.match(await (await fetch(base + "/robots.txt")).text(), /Sitemap:/);
 const script = await readFile(resolve(root, "public", "script.js"), "utf8");
+assert.doesNotMatch(script, /你/, "Runtime Chinese copy uses polite address");
 assert.equal(script, await readFile(resolve(root, "script.js"), "utf8"), "Preview script must match deployed script");
 assert.match(script, /mailto:info@hiremiiglobal.com/);
 new Function(script);
