@@ -114,6 +114,24 @@ for (const route of routes) {
     assert(!/Novatti|Sequoia|HealthLink|Crosstec|AUDD|\$82K|\$105K/i.test(source));
   }
   if (route === "team") assert.match(source, /AQYR Global Services is a subsidiary of AQYR\./);
+  if (route === "employers") {
+    assert.match(source, /id="hiring-review"/);
+    assert.equal((source.match(/class="planning-columns"/g) || []).length, 1);
+    for (const heading of ["Define the work.", "Consider the available talent.", "Agree a workable next step."]) {
+      assert(source.includes('data-en="' + heading + '"'), "Pre-recruitment planning: " + heading);
+    }
+    assert.match(source, /available market information/);
+  }
+  if (route === "approach") {
+    assert.match(source, /class="judgement-notes"/);
+    assert.match(source, /not just the visa category/);
+    assert.match(source, /conflicting dates/);
+  }
+  if (route === "about") {
+    assert.match(source, /access to its wider resources/);
+    assert.match(source, /可按需要对接集团资源/);
+    assert.doesNotMatch(source, /automatically (assess|rank)|AI-driven visa|自动评分|自动处理签证/i);
+  }
   if (route === "sponsorship") {
     for (const id of ["sponsorship-stages", "482-requirements", "186-de-requirements",
       "186-trt-requirements", "employer-documents"]) {
@@ -161,6 +179,10 @@ assert.equal(script, await readFile(resolve(root, "script.js"), "utf8"), "Previe
 assert.match(script, /mailto:info@hiremiiglobal.com/);
 new Function(script);
 const coverResponse = await fetch(base + "/share-cover.png");
+const logo = await readFile(resolve(root, "public/aqyr-logo.svg"), "utf8");
+assert.match(logo, /viewBox="0 0 277.28 109.71"/, "Official logo retains its clear space");
+assert.match(logo, /#1f4434/i);
+assert.match(logo, /#45c487/i);
 assert.equal(coverResponse.status, 200);
 assert.match(coverResponse.headers.get("content-type"), /image\/png/);
 const cover = Buffer.from(await coverResponse.arrayBuffer());

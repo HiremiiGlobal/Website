@@ -8,7 +8,8 @@ const nextRequire = createRequire(require.resolve("next/package.json"));
 const sharp = nextRequire("sharp");
 const root = resolve(dirname(import.meta.filename), "..");
 const logo = (await readFile(resolve(root, "public/aqyr-logo.svg"), "utf8"))
-  .replace(/<svg\b[^>]*>/, '<svg x="300" y="165" width="600" height="160" viewBox="0 0 150 40">');
+  .replace(/<\?xml[^>]*\?>\s*/, "")
+  .replace(/<svg\b/, '<svg x="235" y="105" width="730" height="289"');
 const cover = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#fafbf8"/>
   ${logo}
