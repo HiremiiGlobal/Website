@@ -126,6 +126,14 @@ for (const route of routes) {
       assert(source.includes('data-en="' + heading + '"'), "Pre-recruitment planning: " + heading);
     }
     assert.match(source, /available market information/);
+    for (const topic of ["01 / TALENT MOBILITY", "02 / EMPLOYER COMPLIANCE", "03 / POLICY &amp; PLANNING"]) {
+      assert(source.includes('data-en="' + topic + '"'), "Employer advisory topic: " + topic);
+    }
+    assert.match(source, /data-zh="全球人才流动，/);
+    assert.match(source, /Australian migration requirements/);
+    assert.match(source, /employment-law or tax advisers/);
+    assert.match(source, /when it takes effect/);
+    assert.equal((source.match(/<details class="faq-item">/g) || []).length, 5);
   }
   if (route === "approach") {
     assert.match(source, /class="judgement-notes"/);

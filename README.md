@@ -66,6 +66,8 @@ All seven examples now share one case-study presentation on `/stories#case-exper
 
 The owner approved adding business/HR and Australian market-entry coordination on `/employers#business-support`, plus skills-assessment, qualification-recognition and education-to-employment preparation on `/talent#career-preparation`. These describe an agreed, case-specific scope without employment, visa or assessment guarantees, and do not claim current university or RTO partnerships. Other additions still require owner approval. The website retains its existing mailto enquiry flow and same-URL English/Chinese switch.
 
+The employer page frames its services around global talent mobility involving Australia, migration and sponsorship compliance, and policy-informed workforce planning. It retains pre-recruitment role and market review, 482/186 support and Australian HR coordination. Cross-border support does not imply immigration advice for every destination, a guaranteed outcome, a policy-news subscription or a comprehensive employment-law/tax compliance service; specialist matters are coordinated with the appropriate advisers. Both languages distinguish applications from ongoing obligations, and describe an agreed, business-specific scope. General workplace guidance: [Fair Work information for visa holders and migrants](https://www.fairwork.gov.au/find-help-for/visa-holders-migrants).
+
 ## Local media
 
 ### AQYR brand materials

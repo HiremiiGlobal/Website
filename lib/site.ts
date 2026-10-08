@@ -16,7 +16,7 @@ export const shareImage = {
 };
 export const pages = {
   about: { fileName: "about.html", title: "About Our Visa & Workforce Advisory Company", description: "Meet AQYR Global Services, a subsidiary of AQYR with service roots in Prince Migration and Hiremii Global Services, supporting Australian visas and workforce matters." },
-  employers: { fileName: "employers.html", title: "Employer Sponsorship & Recruitment", description: "Recruitment, 482 and 186 sponsorship, workforce preparation and Australian market-entry HR coordination for businesses." },
+  employers: { fileName: "employers.html", title: "Global Talent Mobility & Employer Compliance", description: "Australian talent mobility, employer sponsorship compliance and policy-informed workforce planning, including 482, 186 and local HR coordination." },
   talent: { fileName: "talent.html", title: "Australian Visa Services for Individuals", description: "Visitor, student, skilled migration and partner visa support, with practical preparation guidance, skills assessments and education-to-career planning." },
   sponsorship: { fileName: "sponsorship.html", title: "482 & 186 Direct Entry Visa Support", description: "Explore 482 Skills in Demand, 186 Direct Entry and TRT pathways, with employer nomination and visa preparation support for businesses and applicants." },
   approach: { fileName: "approach.html", title: "Our Visa & Sponsorship Support Process", description: "How we support visa and employer sponsorship matters: initial assessment, an agreed service scope, document preparation and ongoing communication." },
