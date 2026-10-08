@@ -66,6 +66,13 @@ for (const route of routes) {
   assert.equal((html.match(/<h1\b/g) || []).length, 1, "One main heading: " + route);
   const source = await readFile(resolve(root, "content", (route || "index") + ".html"), "utf8");
   assert.match(source, /data-en="Global Services"/);
+  assert.match(source, /data-aria-label-en="AQYR Global Services home" data-aria-label-zh="AQYR Global Services 首页"/);
+  assert.match(source, /data-aria-label-en="Main navigation" data-aria-label-zh="主导航"/);
+  assert.match(source, /data-aria-label-en="Legal" data-aria-label-zh="隐私政策与使用条款"/);
+  for (const [, image] of source.matchAll(/(<img\b[^>]*src="\/scenes\/[^>]+>)/g)) {
+    assert.match(image, /data-alt-en="[^"]+"/);
+    assert.match(image, /data-alt-zh="[^"]+"/);
+  }
   assert(!/src="https?:/i.test(source), "Images must be hosted locally: " + route);
   assert(!/[↗→↔]/u.test(source), "No emoji-prone text arrows: " + route);
   assert(!/再次确认|待审核|generated portraits|reconfirm roles/i.test(source));
@@ -111,6 +118,16 @@ for (const route of routes) {
     assert.match(source, /id="historical-cases"/, "Keep earlier case links working");
     assert.match(source, /Nomination approved without a further information request/);
     assert.match(source, /not a visa grant/);
+    const caseDirectory = source.match(/<nav class="case-directory"[\s\S]*?<\/nav>/)?.[0];
+    assert(caseDirectory, "Cases have a compact reading directory");
+    const caseIds = [...source.matchAll(/<article class="case-study case-detailed reveal"[^>]*id="([^"]+)"/g)]
+      .map(([, id]) => id);
+    assert.deepEqual([...caseDirectory.matchAll(/href="#(case-[^"]+)"/g)].map(([, id]) => id), caseIds);
+    for (const target of ["business-cases", "individual-cases"]) {
+      assert(caseDirectory.includes('href="#' + target + '"'));
+    }
+    assert.match(source, /class="case-group-links"/);
+    assert.doesNotMatch(source, /Copy case link|复制案例链接/);
     assert(!/Novatti|Sequoia|HealthLink|Crosstec|AUDD|\$82K|\$105K/i.test(source));
   }
   if (route === "team") {
@@ -145,6 +162,18 @@ for (const route of routes) {
     assert.equal((source.match(/data-case-en="/g) || []).length, 4, "Each stage has English detail");
     assert.equal((source.match(/data-case-zh="/g) || []).length, 4, "Each stage has Chinese detail");
     assert.match(source, /id="case-map-detail" class="case-map-detail" aria-live="polite"/);
+    assert.deepEqual([...source.matchAll(/<span class="case-map-point[^\"]*">([^<]+)<\/span>/g)]
+      .map(([, label]) => label), ["01", "02", "03–04", "05"]);
+    assert.doesNotMatch(source, /case-map-hint/);
+    assert.equal((source.match(/class="step reveal"/g) || []).length, 5);
+  }
+  if (route === "contact") {
+    assert.match(source, /<textarea[^>]*aria-describedby="enquiry-privacy-hint"/);
+    assert.equal((source.match(/id="enquiry-privacy-hint"/g) || []).length, 1);
+    assert(source.indexOf('id="enquiry-privacy-hint"') < source.indexOf('class="button enquiry-submit"'),
+      "Sensitive-information advice precedes the email action");
+    assert.match(source, /Please do not include passport numbers, bank details or full visa documents/);
+    assert.match(source, /网站不会自动发送邮件/);
   }
   if (route === "about") {
     assert.match(source, /access to its wider resources/);
@@ -207,6 +236,13 @@ assert.match(script, /mailto:info@hiremiiglobal.com/);
 assert.match(script, /caseMapStages\.forEach/);
 assert.match(script, /siteHeader\?\.classList\.toggle\('is-compact'/);
 assert.match(script, /motionPreference\.matches/);
+assert.match(script, /node\.dataset\.ariaLabelZh/);
+assert.match(script, /node\.dataset\.altZh/);
+const sharedStyles = await readFile(resolve(root, "style.css"), "utf8");
+assert.match(sharedStyles, /--focus-on-dark:#b8edcf/);
+assert.match(sharedStyles, /outline-color:var\(--focus-on-dark\)/);
+assert.match(sharedStyles, /\.legal-copy\{max-width:68ch\}/);
+assert.match(sharedStyles, /border:1px solid var\(--field-border\)/);
 new Function(script);
 const coverResponse = await fetch(base + "/share-cover.png");
 const logo = await readFile(resolve(root, "public/aqyr-logo.svg"), "utf8");

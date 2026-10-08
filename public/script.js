@@ -86,6 +86,12 @@
     document.querySelectorAll('[data-en][data-zh]').forEach(node => {
       node.innerHTML = language === 'zh' ? node.dataset.zh : node.dataset.en;
     });
+    document.querySelectorAll('[data-aria-label-en][data-aria-label-zh]').forEach(node => {
+      node.setAttribute('aria-label', language === 'zh' ? node.dataset.ariaLabelZh : node.dataset.ariaLabelEn);
+    });
+    document.querySelectorAll('[data-alt-en][data-alt-zh]').forEach(node => {
+      node.setAttribute('alt', language === 'zh' ? node.dataset.altZh : node.dataset.altEn);
+    });
     document.querySelectorAll('[data-placeholder-en][data-placeholder-zh]').forEach(node => {
       node.placeholder = language === 'zh' ? node.dataset.placeholderZh : node.dataset.placeholderEn;
     });
@@ -94,7 +100,6 @@
       languageButton.setAttribute('aria-label', language === 'en' ? 'Switch to Chinese' : '切换为英文');
     }
     updateMenuLabel();
-    caseMap?.setAttribute('aria-label', language === 'zh' ? '您的个案准备流程' : 'How your case is prepared');
     backToTop.setAttribute('aria-label', language === 'en' ? 'Back to top' : '返回顶部');
     backToTop.title = language === 'en' ? 'Back to top' : '返回顶部';
     scheduleScrollUpdate();

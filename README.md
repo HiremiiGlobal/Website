@@ -35,6 +35,12 @@ The shared floating header stays available while scrolling and becomes more comp
 
 The four-stage diagram on `/approach` describes professional, case-specific preparation. Selecting a stage updates its bilingual explanation; the connecting lines draw in once. This is an explanatory diagram, not an automated assessment or a claim of AI-powered visa advice. Photo blending is limited to the homepage and individual-service hero images rather than applied throughout the site.
 
+The diagram numbers correspond to the five detailed service steps: 01, 02, 03–04 (preparation and coordination together), and 05. The stages remain selectable without an extra explanatory hint above the diagram. Case experience keeps all seven narratives and their existing anchors; the hero offers business/individual shortcuts and a compact two-group directory precedes the case studies. No copy-link buttons are used.
+
+Long-form company and legal copy uses a narrower reading measure. Dark brand surfaces have a separate high-contrast keyboard focus colour, and enquiry fields have stronger boundaries without changing decorative dividers. The existing sensitive-information advice sits beside the enquiry textarea and is connected with `aria-describedby`; the mailto draft/self-send flow is unchanged.
+
+Shared accessibility labels and editorial-photo descriptions use `data-aria-label-en` / `data-aria-label-zh` and `data-alt-en` / `data-alt-zh`. The language switch updates these attributes as well as visible copy. Proper names and brand artwork retain their names rather than introducing translated identities.
+
 Decorative background motion pauses offscreen and in hidden tabs. Reduced-motion preferences disable the ambient animation and line drawing; without JavaScript, the diagram labels, first explanation and detailed service content remain readable. Keep these behaviours when adjusting effects in `style.css` or `public/script.js`.
 
 ## Search metadata
