@@ -113,7 +113,12 @@ for (const route of routes) {
     assert.match(source, /not a visa grant/);
     assert(!/Novatti|Sequoia|HealthLink|Crosstec|AUDD|\$82K|\$105K/i.test(source));
   }
-  if (route === "team") assert.match(source, /AQYR Global Services is a subsidiary of AQYR\./);
+  if (route === "team") {
+    assert.match(source, /AQYR Global Services is a subsidiary of AQYR\./);
+    assert.match(source, /data-en="Senior Migration Operations Manager" data-zh="高级移民运营经理"/);
+    assert.match(source, /data-en="Accounts and Admin Officer" data-zh="账务与行政专员"/);
+    assert.doesNotMatch(source, /Clients &amp; Coordination Manager|Accounts &amp; Finance/);
+  }
   if (route === "employers") {
     assert.match(source, /id="hiring-review"/);
     assert.equal((source.match(/class="planning-columns"/g) || []).length, 1);
@@ -126,6 +131,12 @@ for (const route of routes) {
     assert.match(source, /class="judgement-notes"/);
     assert.match(source, /not just the visa category/);
     assert.match(source, /conflicting dates/);
+    assert.match(source, /class="case-map" aria-label="How your case is prepared"/);
+    assert.equal((source.match(/class="case-map-stage"/g) || []).length, 4, "Four case preparation stages");
+    assert.equal((source.match(/aria-pressed="true"/g) || []).length, 1, "One initially selected stage");
+    assert.equal((source.match(/data-case-en="/g) || []).length, 4, "Each stage has English detail");
+    assert.equal((source.match(/data-case-zh="/g) || []).length, 4, "Each stage has Chinese detail");
+    assert.match(source, /id="case-map-detail" class="case-map-detail" aria-live="polite"/);
   }
   if (route === "about") {
     assert.match(source, /access to its wider resources/);
@@ -133,6 +144,14 @@ for (const route of routes) {
     assert.doesNotMatch(source, /automatically (assess|rank)|AI-driven visa|自动评分|自动处理签证/i);
   }
   if (route === "sponsorship") {
+    assert.match(source, /class="sponsorship-guide"/);
+    assert.match(source, /class="sponsorship-content"/);
+    const directory = source.match(/<nav class="page-jump"[\s\S]*?<\/nav>/)?.[0];
+    assert(directory, "Sponsorship reading directory remains accessible");
+    for (const target of ["visa-482", "visa-186", "comparison", "preparation", "sponsorship-faq"]) {
+      assert(directory.includes('href="#' + target + '"'), "Directory link: " + target);
+      assert(source.includes('id="' + target + '"'), "Directory target remains in full content: " + target);
+    }
     for (const id of ["sponsorship-stages", "482-requirements", "186-de-requirements",
       "186-trt-requirements", "employer-documents"]) {
       assert(source.includes('class="faq-item" id="' + id + '"'), "Practical sponsorship FAQ: " + id);
@@ -177,6 +196,9 @@ const script = await readFile(resolve(root, "public", "script.js"), "utf8");
 assert.doesNotMatch(script, /你/, "Runtime Chinese copy uses polite address");
 assert.equal(script, await readFile(resolve(root, "script.js"), "utf8"), "Preview script must match deployed script");
 assert.match(script, /mailto:info@hiremiiglobal.com/);
+assert.match(script, /caseMapStages\.forEach/);
+assert.match(script, /siteHeader\?\.classList\.toggle\('is-compact'/);
+assert.match(script, /motionPreference\.matches/);
 new Function(script);
 const coverResponse = await fetch(base + "/share-cover.png");
 const logo = await readFile(resolve(root, "public/aqyr-logo.svg"), "utf8");

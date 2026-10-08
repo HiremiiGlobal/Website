@@ -5,6 +5,66 @@
   const navigation = document.querySelector('.nav');
   const form = document.querySelector('#enquiry-form');
   const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const siteHeader = document.querySelector('.top');
+  const caseMap = document.querySelector('.case-map');
+  const caseMapDetail = caseMap?.querySelector('#case-map-detail');
+  const caseMapStages = [...(caseMap?.querySelectorAll('.case-map-stage') || [])];
+  caseMapStages.forEach(stage => {
+    stage.addEventListener('click', () => {
+      caseMapStages.forEach(node => node.setAttribute('aria-pressed', String(node === stage)));
+      if (caseMapDetail) {
+        caseMapDetail.dataset.en = stage.dataset.caseEn;
+        caseMapDetail.dataset.zh = stage.dataset.caseZh;
+        caseMapDetail.textContent = root.dataset.lang === 'zh' ? stage.dataset.caseZh : stage.dataset.caseEn;
+      }
+    });
+  });
+  if (caseMap && 'IntersectionObserver' in window && !motionPreference.matches) {
+    caseMap.classList.add('map-ready');
+    const mapObserver = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) {
+        caseMap.classList.add('map-on');
+        mapObserver.disconnect();
+      }
+    }, { threshold: 0.2 });
+    mapObserver.observe(caseMap);
+    motionPreference.addEventListener('change', event => {
+      if (event.matches) {
+        caseMap.classList.remove('map-ready');
+        mapObserver.disconnect();
+      }
+    });
+  }
+
+  // Decorative layers never intercept input; pause them offscreen and in hidden tabs.
+  const ambientSurfaces = [...document.querySelectorAll('main > .hero, main .section.dark, main > .cta')];
+  const visibleSurfaces = new Set();
+  ambientSurfaces.forEach(surface => {
+    const backdrop = document.createElement('div');
+    backdrop.className = 'ambient-backdrop';
+    backdrop.setAttribute('aria-hidden', 'true');
+    surface.classList.add('ambient-surface');
+    surface.prepend(backdrop);
+  });
+  const updateAmbientMotion = () => {
+    const enabled = !motionPreference.matches && !document.hidden;
+    ambientSurfaces.forEach(surface => {
+      surface.classList.toggle('ambient-running', enabled && visibleSurfaces.has(surface));
+    });
+  };
+  if ('IntersectionObserver' in window && ambientSurfaces.length) {
+    const ambientObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) visibleSurfaces.add(entry.target);
+        else visibleSurfaces.delete(entry.target);
+      });
+      updateAmbientMotion();
+    });
+    ambientSurfaces.forEach(surface => ambientObserver.observe(surface));
+    document.addEventListener('visibilitychange', updateAmbientMotion);
+    motionPreference.addEventListener('change', updateAmbientMotion);
+  }
+
   const readingProgress = document.createElement('div');
   readingProgress.className = 'reading-progress';
   readingProgress.setAttribute('aria-hidden', 'true');
@@ -34,6 +94,7 @@
       languageButton.setAttribute('aria-label', language === 'en' ? 'Switch to Chinese' : '切换为英文');
     }
     updateMenuLabel();
+    caseMap?.setAttribute('aria-label', language === 'zh' ? '您的个案准备流程' : 'How your case is prepared');
     backToTop.setAttribute('aria-label', language === 'en' ? 'Back to top' : '返回顶部');
     backToTop.title = language === 'en' ? 'Back to top' : '返回顶部';
     scheduleScrollUpdate();
@@ -58,20 +119,48 @@
     .map(link => ({ link, target: document.getElementById(link.hash.slice(1)) }))
     .filter(item => item.target);
   let scrollFrame = 0;
+  let activePageLink = null;
+  let preferredPageLink = pageLinks.find(item => item.link.hash === window.location.hash) || null;
+  pageLinks.forEach(item => {
+    item.link.addEventListener('click', () => {
+      preferredPageLink = item;
+      scheduleScrollUpdate();
+    });
+  });
   function updateScrollState() {
     scrollFrame = 0;
+    siteHeader?.classList.toggle('is-compact', window.scrollY > 64);
     const distance = Math.max(0, root.scrollHeight - window.innerHeight);
     const progress = distance > 0 ? Math.min(1, Math.max(0, window.scrollY / distance)) : 0;
     progressLine.style.transform = 'scaleX(' + progress + ')';
     backToTop.hidden = window.scrollY < Math.max(600, window.innerHeight * 0.8);
     let current = null;
+    let currentTop = -Infinity;
     pageLinks.forEach(item => {
-      if (item.target.getBoundingClientRect().top <= window.innerHeight * 0.35) current = item;
+      const top = item.target.getBoundingClientRect().top;
+      if (top > window.innerHeight * 0.35) return;
+      // Side-by-side visa cards share a reading position; retain the chosen card.
+      if (!current || top > currentTop + 2 || (Math.abs(top - currentTop) <= 2 && item === preferredPageLink)) {
+        current = item;
+        currentTop = top;
+      }
     });
     pageLinks.forEach(item => {
       if (item === current) item.link.setAttribute('aria-current', 'location');
       else item.link.removeAttribute('aria-current');
     });
+    if (current && current !== activePageLink) {
+      const track = current.link.closest('.wrap');
+      if (track && track.scrollWidth > track.clientWidth) {
+        const linkBounds = current.link.getBoundingClientRect();
+        const trackBounds = track.getBoundingClientRect();
+        if (linkBounds.left < trackBounds.left || linkBounds.right > trackBounds.right) {
+          track.scrollBy({ left: linkBounds.left - trackBounds.left - 8,
+            behavior: motionPreference.matches ? 'instant' : 'smooth' });
+        }
+      }
+    }
+    activePageLink = current;
   }
   function scheduleScrollUpdate() {
     if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScrollState);
