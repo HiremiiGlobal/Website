@@ -9,16 +9,94 @@
   const caseMap = document.querySelector('.case-map');
   const caseMapDetail = caseMap?.querySelector('#case-map-detail');
   const caseMapStages = [...(caseMap?.querySelectorAll('.case-map-stage') || [])];
-  caseMapStages.forEach(stage => {
-    stage.addEventListener('click', () => {
-      caseMapStages.forEach(node => node.setAttribute('aria-pressed', String(node === stage)));
-      if (caseMapDetail) {
-        caseMapDetail.dataset.en = stage.dataset.caseEn;
-        caseMapDetail.dataset.zh = stage.dataset.caseZh;
-        caseMapDetail.textContent = root.dataset.lang === 'zh' ? stage.dataset.caseZh : stage.dataset.caseEn;
-      }
+  const caseMapToggle = caseMap?.querySelector('.case-map-toggle');
+  const caseMapInterval = 5000;
+  let caseMapIndex = Math.max(0, caseMapStages.findIndex(stage => stage.getAttribute('aria-pressed') === 'true'));
+  let caseMapTimer = 0;
+  let caseMapPaused = motionPreference.matches;
+  let caseMapHovered = false;
+  let caseMapVisible = !('IntersectionObserver' in window);
+
+  function selectCaseMapStage(index, manual = false) {
+    const stage = caseMapStages[index];
+    if (!stage) return;
+    caseMapIndex = index;
+    caseMapStages.forEach(node => node.setAttribute('aria-pressed', String(node === stage)));
+    if (caseMapDetail) {
+      // Automatic changes are visual; announce only a visitor's explicit selection.
+      caseMapDetail.setAttribute('aria-live', manual ? 'polite' : 'off');
+      caseMapDetail.dataset.en = stage.dataset.caseEn;
+      caseMapDetail.dataset.zh = stage.dataset.caseZh;
+      caseMapDetail.textContent = root.dataset.lang === 'zh' ? stage.dataset.caseZh : stage.dataset.caseEn;
+    }
+  }
+
+  function updateCaseMapControl() {
+    if (!caseMapToggle) return;
+    const label = root.dataset.lang === 'zh'
+      ? (caseMapPaused ? '播放五步流程' : '暂停五步流程')
+      : (caseMapPaused ? 'Play the five-step process' : 'Pause the five-step process');
+    caseMapToggle.dataset.paused = String(caseMapPaused);
+    caseMapToggle.setAttribute('aria-label', label);
+    caseMapToggle.title = label;
+  }
+
+  function scheduleCaseMap() {
+    clearTimeout(caseMapTimer);
+    caseMapTimer = 0;
+    if (!caseMap || caseMapStages.length < 2 || caseMapPaused || caseMapHovered ||
+        !caseMapVisible || document.hidden ||
+        (caseMap.contains(document.activeElement) && document.activeElement !== caseMapToggle &&
+          document.activeElement.matches(':focus-visible'))) return;
+    caseMapTimer = setTimeout(() => {
+      selectCaseMapStage((caseMapIndex + 1) % caseMapStages.length);
+      scheduleCaseMap();
+    }, caseMapInterval);
+  }
+
+  if (caseMap && caseMapStages.length) {
+    if (caseMapToggle) {
+      caseMapToggle.hidden = false;
+      caseMapToggle.addEventListener('click', () => {
+        caseMapPaused = !caseMapPaused;
+        updateCaseMapControl();
+        scheduleCaseMap();
+      });
+    }
+    caseMapStages.forEach((stage, index) => {
+      stage.addEventListener('click', () => {
+        selectCaseMapStage(index, true);
+        scheduleCaseMap();
+      });
     });
-  });
+    caseMap.addEventListener('pointerenter', event => {
+      if (event.pointerType !== 'mouse') return;
+      caseMapHovered = true;
+      scheduleCaseMap();
+    });
+    caseMap.addEventListener('pointerleave', event => {
+      if (event.pointerType !== 'mouse') return;
+      caseMapHovered = false;
+      scheduleCaseMap();
+    });
+    caseMap.addEventListener('focusin', scheduleCaseMap);
+    caseMap.addEventListener('focusout', () => queueMicrotask(scheduleCaseMap));
+    document.addEventListener('visibilitychange', scheduleCaseMap);
+    motionPreference.addEventListener('change', event => {
+      if (event.matches) caseMapPaused = true;
+      updateCaseMapControl();
+      scheduleCaseMap();
+    });
+    if ('IntersectionObserver' in window) {
+      const playbackObserver = new IntersectionObserver(entries => {
+        caseMapVisible = entries.some(entry => entry.isIntersecting);
+        scheduleCaseMap();
+      }, { threshold: 0.35 });
+      playbackObserver.observe(caseMap);
+    }
+    updateCaseMapControl();
+    scheduleCaseMap();
+  }
   if (caseMap && 'IntersectionObserver' in window && !motionPreference.matches) {
     caseMap.classList.add('map-ready');
     const mapObserver = new IntersectionObserver(entries => {
@@ -100,6 +178,7 @@
       languageButton.setAttribute('aria-label', language === 'en' ? 'Switch to Chinese' : '切换为英文');
     }
     updateMenuLabel();
+    updateCaseMapControl();
     backToTop.setAttribute('aria-label', language === 'en' ? 'Back to top' : '返回顶部');
     backToTop.title = language === 'en' ? 'Back to top' : '返回顶部';
     scheduleScrollUpdate();
@@ -120,7 +199,7 @@
     if (returnFocus) menuButton?.focus();
   }
 
-  const pageLinks = [...document.querySelectorAll('.page-jump a[href^="#"]')]
+  const pageLinks = [...document.querySelectorAll('.page-jump a[href^="#"], .case-directory li a[href^="#"]')]
     .map(link => ({ link, target: document.getElementById(link.hash.slice(1)) }))
     .filter(item => item.target);
   let scrollFrame = 0;
@@ -155,7 +234,7 @@
       else item.link.removeAttribute('aria-current');
     });
     if (current && current !== activePageLink) {
-      const track = current.link.closest('.wrap');
+      const track = current.link.closest('.case-directory-track, .wrap');
       if (track && track.scrollWidth > track.clientWidth) {
         const linkBounds = current.link.getBoundingClientRect();
         const trackBounds = track.getBoundingClientRect();

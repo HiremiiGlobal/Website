@@ -120,6 +120,9 @@ for (const route of routes) {
     assert.match(source, /not a visa grant/);
     const caseDirectory = source.match(/<nav class="case-directory"[\s\S]*?<\/nav>/)?.[0];
     assert(caseDirectory, "Cases have a compact reading directory");
+    assert.match(source, /class="wrap case-reading-layout"/);
+    assert.match(caseDirectory, /class="case-directory-track"/);
+    assert.match(source, /<\/nav><div class="case-reading-content">/);
     const caseIds = [...source.matchAll(/<article class="case-study case-detailed reveal"[^>]*id="([^"]+)"/g)]
       .map(([, id]) => id);
     assert.deepEqual([...caseDirectory.matchAll(/href="#(case-[^"]+)"/g)].map(([, id]) => id), caseIds);
@@ -157,14 +160,21 @@ for (const route of routes) {
     assert.match(source, /not just the visa category/);
     assert.match(source, /conflicting dates/);
     assert.match(source, /class="case-map" aria-label="How your case is prepared"/);
-    assert.equal((source.match(/class="case-map-stage"/g) || []).length, 4, "Four case preparation stages");
+    assert.equal((source.match(/class="case-map-stage"/g) || []).length, 5, "Five case preparation stages");
     assert.equal((source.match(/aria-pressed="true"/g) || []).length, 1, "One initially selected stage");
-    assert.equal((source.match(/data-case-en="/g) || []).length, 4, "Each stage has English detail");
-    assert.equal((source.match(/data-case-zh="/g) || []).length, 4, "Each stage has Chinese detail");
+    assert.equal((source.match(/data-case-en="/g) || []).length, 5, "Each stage has English detail");
+    assert.equal((source.match(/data-case-zh="/g) || []).length, 5, "Each stage has Chinese detail");
     assert.match(source, /id="case-map-detail" class="case-map-detail" aria-live="polite"/);
     assert.deepEqual([...source.matchAll(/<span class="case-map-point[^\"]*">([^<]+)<\/span>/g)]
-      .map(([, label]) => label), ["01", "02", "03–04", "05"]);
+      .map(([, label]) => label), ["01", "02", "03", "04", "05"]);
+    assert.equal((source.match(/class="case-map-line"/g) || []).length, 4, "Four connections between five stages");
+    const diagramTitles = [...source.matchAll(/class="case-map-title" data-en="([^"]+)" data-zh="([^"]+)"/g)]
+      .map(([, en, zh]) => [en, zh]);
+    const detailTitles = [...source.matchAll(/<article class="step reveal">[\s\S]*?<h3 data-en="([^"]+)" data-zh="([^"]+)"/g)]
+      .map(([, en, zh]) => [en, zh]);
+    assert.deepEqual(diagramTitles, detailTitles, "Diagram and detailed workflow titles match in both languages");
     assert.doesNotMatch(source, /case-map-hint/);
+    assert.match(source, /class="case-map-toggle" type="button" aria-label="Pause the five-step process"/);
     assert.equal((source.match(/class="step reveal"/g) || []).length, 5);
   }
   if (route === "contact") {
@@ -234,6 +244,11 @@ assert.doesNotMatch(script, /你/, "Runtime Chinese copy uses polite address");
 assert.equal(script, await readFile(resolve(root, "script.js"), "utf8"), "Preview script must match deployed script");
 assert.match(script, /mailto:info@hiremiiglobal.com/);
 assert.match(script, /caseMapStages\.forEach/);
+assert.match(script, /const caseMapInterval = 5000/);
+assert.match(script, /\(caseMapIndex \+ 1\) % caseMapStages\.length/);
+assert.match(script, /caseMap\.contains\(document\.activeElement\)/);
+assert.match(script, /document\.addEventListener\('visibilitychange', scheduleCaseMap\)/);
+assert.match(script, /caseMapDetail\.setAttribute\('aria-live', manual \? 'polite' : 'off'\)/);
 assert.match(script, /siteHeader\?\.classList\.toggle\('is-compact'/);
 assert.match(script, /motionPreference\.matches/);
 assert.match(script, /node\.dataset\.ariaLabelZh/);
