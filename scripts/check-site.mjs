@@ -206,6 +206,19 @@ for (const route of routes) {
     assert.match(source, /core-skills-stream/);
     assert.match(source, /direct-entry-stream/);
     assert.match(source, /temporary-residence-transition-stream/);
+    const comparison = source.match(/<section[^>]*id="comparison"[\s\S]*?<\/section>/)?.[0];
+    assert(comparison, "Sponsorship pathway comparison remains available");
+    assert.match(comparison, /class="visa-transition-note"/);
+    assert.match(comparison, /separate 186 TRT application/);
+    assert.match(comparison, /并非自动转为永居/);
+    for (const className of ["comparison-desktop", "comparison-cards"]) {
+      const block = comparison.slice(comparison.indexOf(className));
+      assert.match(block, /no prior 482 required/);
+      assert.match(block, /former 457 primary holder, or qualifying bridging visa holder/);
+    }
+    const trt = source.match(/<details[^>]*id="186-trt-requirements"[\s\S]*?<\/details>/)?.[0];
+    assert.match(trt, /不能直接从 TRT 起步/);
+    assert.match(trt, /in Australia in the three years before applying/);
   }
   if (route === "talent") {
     for (const id of ["visitor-visas", "student-visas", "skilled-visas", "partner-family-visas"]) {
