@@ -218,7 +218,20 @@ for (const route of routes) {
     }
     const trt = source.match(/<details[^>]*id="186-trt-requirements"[\s\S]*?<\/details>/)?.[0];
     assert.match(trt, /不能直接从 TRT 起步/);
-    assert.match(trt, /in Australia in the three years before applying/);
+    assert.match(trt, /in Australia (?:&lt;strong class=&quot;visa-timing&quot;&gt;|<strong class="visa-timing">)in the three years before applying/);
+    for (const [id, english, chinese] of [
+      ["482-requirements", "at least one year", "至少一年"],
+      ["186-de-requirements", "at least three years", "至少三年"],
+      ["186-trt-requirements", "at least two years", "申请前的三年内累计至少两年"],
+      ["186-trt-requirements", "in the three years before applying", "申请前的三年内累计至少两年"],
+    ]) {
+      const answer = source.match(new RegExp('<details[^>]*id="' + id + '"[\\s\\S]*?<\\/details>'))?.[0];
+      assert(answer, "Visa time requirement question remains available: " + id);
+      for (const phrase of [english, chinese]) {
+        assert(answer.includes('&lt;strong class=&quot;visa-timing&quot;&gt;' + phrase + '&lt;/strong&gt;'), "Bilingual time emphasis: " + phrase);
+      }
+      assert(answer.includes('<strong class="visa-timing">' + english + '</strong>'), "Initial English time emphasis: " + english);
+    }
   }
   if (route === "talent") {
     for (const id of ["visitor-visas", "student-visas", "skilled-visas", "partner-family-visas"]) {
