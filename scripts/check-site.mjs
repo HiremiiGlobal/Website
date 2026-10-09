@@ -83,6 +83,32 @@ for (const route of routes) {
   assert.match(source, /href="\/about"/, "Company introduction link: " + route);
   const primaryNavigation = source.match(/<nav class="nav"[\s\S]*?<\/nav>/)?.[0];
   assert(primaryNavigation && !primaryNavigation.includes('href="/about"'), "Company introduction remains footer-only: " + route);
+  const processingTimesUrl = "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-processing-times/global-visa-processing-times";
+  const footer = source.match(/<footer\b[\s\S]*?<\/footer>/)?.[0];
+  assert(footer && !footer.includes(processingTimesUrl), "Processing-time entry stays out of the footer: " + route);
+  assert(!primaryNavigation.includes(processingTimesUrl), "No processing-time item in primary navigation");
+  const servedFooter = html.match(/<footer\b[\s\S]*?<\/footer>/)?.[0];
+  assert(servedFooter && !servedFooter.includes(processingTimesUrl), "Served footer stays uncluttered: " + route);
+  if (["talent", "sponsorship"].includes(route)) {
+    const processingEntry = source.match(/<div class="processing-times-entry" id="processing-times">[\s\S]*?<\/div>/)?.[0];
+    assert(processingEntry, "Lightweight processing-time entry: " + route);
+    assert(processingEntry.includes('href="' + processingTimesUrl + '"'));
+    assert.match(processingEntry, /target="_blank" rel="noopener noreferrer"/);
+    assert.match(processingEntry, /data-aria-label-zh="[^"]*新标签页/);
+    assert.match(processingEntry, /data-zh="查询签证参考审理时间"/);
+    assert.match(processingEntry, /官方统计仅供参考/);
+    assert.equal((source.match(/id="processing-times"/g) || []).length, 1);
+    assert(html.includes('class="processing-times-entry"'), "Page entry is served: " + route);
+    const entryIndex = source.indexOf('id="processing-times"');
+    if (route === "sponsorship") {
+      assert(entryIndex > source.indexOf('id="comparison"') && entryIndex < source.indexOf('id="preparation"'), "Entry follows comparison, before preparation");
+      assert.match(processingEntry, /雇主提名/);
+    } else {
+      const otherVisas = source.match(/<section[^>]*id="other-visas"[\s\S]*?<\/section>/)?.[0];
+      assert(otherVisas.includes(processingEntry), "Entry stays in other visa services");
+      assert(entryIndex > source.indexOf('id="partner-family-visas"'), "Entry follows the visa accordions");
+    }
+  }
   const compliance = source.match(/<div class="footer-compliance">([\s\S]*?)<\/div>/)?.[1];
   assert(compliance, "Low-key registration details on every page: " + route);
   assert.match(compliance, /ABN 23 619 566 040/);
@@ -206,6 +232,26 @@ for (const route of routes) {
     assert.match(source, /core-skills-stream/);
     assert.match(source, /direct-entry-stream/);
     assert.match(source, /temporary-residence-transition-stream/);
+    for (const id of ["482-requirements", "186-de-requirements", "186-trt-requirements"]) {
+      assert(html.includes('class="visa-english-summary"'), "Rendered page includes current English score summary");
+      const english = source.match(new RegExp('<details[^>]*id="' + id + '"[\\s\\S]*?<\\/details>'))?.[0];
+      assert.match(english, /class="visa-english-summary"/);
+      assert.match(english, /<dt>IELTS<\/dt>/);
+      assert.match(english, /<dt>PTE Academic<\/dt>/);
+      if (id === "482-requirements") {
+        assert.match(english, /At least 5\.0 in each/);
+        assert.match(english, /listening 33, reading 36, writing 29 and speaking 24/);
+        assert.match(english, /13 September 2025/);
+        assert.match(english, /PTE requires overall 36 and each skill 36/);
+        assert.match(english, /skills-in-demand-visa-subclass-482\/sufficient-english/);
+      } else {
+        assert.match(english, /At least 6\.0 in each/);
+        assert.match(english, /listening 47, reading 48, writing 51 and speaking 54/);
+        assert.match(english, /7 August 2025/);
+        assert.match(english, /each skill must be at least 50/);
+        assert.match(english, /english-language\/competent-english/);
+      }
+    }
     const comparison = source.match(/<section[^>]*id="comparison"[\s\S]*?<\/section>/)?.[0];
     assert(comparison, "Sponsorship pathway comparison remains available");
     assert.match(comparison, /class="visa-transition-note"/);
